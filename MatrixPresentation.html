@@ -1,0 +1,4506 @@
+<!doctype html>
+
+
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>My test presentation</title>
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/matrix.css" id="theme">
+		<style type="text/css" media="screen">
+			.slides section.has-dark-background,
+			.slides section.has-dark-background h2 {
+				color: #00FF00;
+			}
+			.slides section.has-light-background,
+			.slides section.has-light-background h2 {
+				color: #222;
+			}
+		</style>
+	</head>
+
+	<body onload="totalWrapper(); startTorusAction();">
+		<div class="reveal">
+			<div id="help">
+				<div class="helper"></div>
+				<div class="helpTable">
+					<h3 style="margin-bottom:20px;">
+						Help with this presentation.
+					</h3>
+					<ul style="margin-bottom:30px;">
+						<li>
+							Press <a onclick="helpElement();" class="veryRed">"h"</a> to show/hide this help screen.
+						</li>
+						<li>
+							Use <span class="veryRed">left and right arrows</span> to switch between slides.
+						</li>
+						<li>
+							In some slides you can press <span class="veryRed">down arrow</span> to see a separate slide with references.
+						</li>
+						<li>
+							If you press <span class="veryRed">space</span> you'll move through all slides including vertical.
+						</li>
+						<li>
+							You can either use <span class="veryRed">cursor</span> and click on arrows in down right corner.
+						</li>
+						<li>
+							Press <span class="veryRed">Esc</span> to see the overview and browse the slides.
+						</li>
+						<li>
+							Some slides contain interactive elements. The hints will be written there.
+						</li>
+						<li>
+							Remember, you can use <span class="veryRed">Tab</span> or cursor to switch between input forms.
+						</li>
+						<li>
+							If something goes wrong, you can always reload the page. It is just an html-page.
+							If nothing works, probably Javascript is disabled in your browser.
+						</li>
+						<li>
+							Now "running letters" effect is
+							<a id="animStatusField" onclick="switchAnimationEffects();" class="veryRed">enabled</a> &#60;-click to change.
+						</li>
+					</ul>
+					<div>
+						Enjoy your time! <a onclick="helpElement();" class="veryRed">Press</a> to close.
+					</div>
+				</div>
+			</div>
+			<div class="slides">
+
+				<section style="text-align: center;">
+					<div class="r-frame" style="margin-bottom:50px; margin-top:100px;">
+						<h2 class="neon">
+							Matrix Odyssey:
+						</h2>
+						<h3 class="neon">
+							from computational algebra to toric topology and back.
+						</h3>
+					</div>
+					<p style="margin-bottom:50px;">
+						<h4 style="color: white;">
+							Anton Ayzenberg <a href="mailto:ayzenberga@gmail.com">ayzenberga@gmail.com</a> <br>
+							based on joint works with V.Buchstaber, V.Cherepanov, M.Masuda, G.Solomadin, K.Sorokin.
+						</h4>
+					</p>
+					<div class="fragment">
+						<div class="typesetting">
+							<table style="font-size: 15px;">
+								<tr>
+									<td><img id="image1" src="pics/ayzenberg128.jpg" width="128" height="128" /></td>
+									<td><img id="image1" src="pics/buchstaber128.jpg" width="128" height="128" /></td>
+									<td><img id="image1" src="pics/cherepanov128.jpg" width="128" height="128" /></td>
+									<td><img id="image1" src="pics/masuda128.jpg" width="128" height="128" /></td>
+									<td><img id="image1" src="pics/solomadin128.jpg" width="128" height="128" /></td>
+									<td><img id="image1" src="pics/sorokin128.jpg" width="128" height="128" /></td>
+								</tr>
+								<tr>
+									<td>A.Ayzenberg</td>
+									<td>V.Buchstaber</td>
+									<td>V.Cherepanov</td>
+									<td>M.Masuda</td>
+									<td>G.Solomadin</td>
+									<td>K.Sorokin</td>
+								</tr>
+							</table>
+						</div>
+					</div>
+				</section>
+
+				<section>
+
+					<section>
+						<div class="r-frame" style="margin-bottom:15px; margin-top:10px;">
+							<h2 class="neon">
+								Matrix rank computation:
+							</h2>
+						</div>
+						<div class="fragment" style="margin-bottom:30px;">
+							<div class="typesetting">
+								<span class="white">Problem:</span> given a matrix, find its rank. <br />
+								Computation of simplicial homology reduces to this problem. It is important elsewhere.
+							</div>
+						</div>
+						<div class="fragment" style="margin-bottom:30px;">
+							<div class="typesetting">
+								<span class="white">Math solution:</span> Gauss algorithm (if you studied linear algebra).
+							</div>
+							<div class="typesetting">
+								<span class="blue">Advantage:</span> Strict. Understandable. Works over any field.
+							</div>
+							<div class="typesetting">
+								<span class="red">Disadvantage:</span> poorly parallelizable.
+								Hard to parallelize Gauss on GPU.
+							</div>
+						</div>
+						<div class="fragment" style="margin-bottom:30px;">
+							<div class="typesetting">
+								<span class="white">Practical solution:</span> For square matrix, diagonalize and
+								compute the number of nonzero eigenvalues. For non-square matrix A
+								compute singular eigenvalues, i.e. eigenvalues of A<sup>t</sup>A.
+							</div>
+							<div class="typesetting">
+								<span class="blue">Advantage:</span> Asymptotical diagonalization algorithms can be
+								performed on CUDA. This is fast. However, there is
+							</div>
+							<div class="typesetting">
+								<span class="red">Disadvantage:</span> Not exact. Only real coefficients.
+							</div>
+						</div>
+						<div class="fragment">
+							<div class="typesetting">
+								<span class="white">Conclusion:</span> In applications it is important to
+								have asymptotical diagonalization algorithms. In many cases matrices are sparse.
+								We would like to have diagonalization algorithms for particular sparseness types.
+							</div>
+						</div>
+					</section>
+
+					<section>
+						<div class="r-frame" style="margin-bottom:15px; margin-top:10px;">
+							<h2 class="neon">
+								References:
+							</h2>
+							<ul>
+								<li>
+									Alain Cosnuau, Computation on GPU of Eigenvalues and Eigenvectors
+									of a Large Number of Small Hermitian Matrices,
+									Procedia Computer Science 29 (2014), 800--810.
+								</li>
+							</ul>
+						</div>
+					</section>
+
+				</section>
+
+				<section>
+					<section>
+						<div class="r-frame" style="margin-bottom:5px; margin-top:10px;">
+							<h2 class="neon">
+								Graphs and matrix shapes.
+							</h2>
+						</div>
+						<div class="fragment" data-fragment-index="0">
+							<div class="typesetting">
+								<ul>
+									<li>
+										Let $[n]=\{1,\ldots,n\}$. Let $\Gamma$ be a graph with vertex set $[n]$ and edge set
+										$E_\Gamma$.
+									</li>
+									<li>
+										Let $M_n$ be the set of all symmetric real matrices of size $n$.
+									</li>
+									<li>
+										A matrix $A\in M_n$ is called <span class="blue">$\Gamma$-shaped</span> if $a_{i,j}=0$ for $\{i,j\}\notin E_\Gamma$.
+									</li>
+									<li>
+										Let $M_\Gamma$ be the set of all $\Gamma$-shaped matrices
+									</li>
+								</ul>
+							</div>
+						</div>
+
+						<div class="r-stack" style="margin-top:20px; margin-bottom:20px">
+							<div class="fragment fade-in-then-out" data-fragment-index="1">
+								<div class="typesetting">
+									<table style="font-size: 20px;">
+										<tr>
+											<td><img src="pics/clawGreen.png" /></td>
+											<td>$\Rightarrow$</td>
+											<td>
+												\[
+												\begin{pmatrix}
+												\ast & \ast & \ast & \ast \\
+												\ast & \ast &  &  \\
+												\ast &  & \ast &  \\
+												\ast &  &  & \ast
+												\end{pmatrix}
+												\]
+											</td>
+										</tr>
+										<tr>
+											<td>Star graph</td>
+											<td></td>
+											<td>Arrowhead matrix</td>
+										</tr>
+									</table>
+
+								</div>
+							</div>
+
+							<div class="fragment fade-in-then-out" data-fragment-index="2">
+								<div class="typesetting">
+									<table style="font-size: 20px;">
+										<tr>
+											<td><img src="pics/fullGreen.png" /></td>
+											<td>$\Rightarrow$</td>
+											<td>
+												\[
+												\begin{pmatrix}
+												\ast & \ast & \ast & \ast \\
+												\ast & \ast & \ast & \ast \\
+												\ast & \ast & \ast & \ast \\
+												\ast & \ast & \ast & \ast
+												\end{pmatrix}
+												\]
+											</td>
+										</tr>
+										<tr>
+											<td>Full graph </td>
+											<td></td>
+											<td>Full matrix</td>
+										</tr>
+									</table>
+								</div>
+							</div>
+
+							<div class="fragment fade-in-then-out" data-fragment-index="3">
+								<div class="typesetting">
+									<table style="font-size: 20px;">
+										<tr>
+											<td><img src="pics/pathGreen.png" /></td>
+											<td>$\Rightarrow$</td>
+											<td>
+												\[
+												\begin{pmatrix}
+												\ast & \ast &  &  \\
+												\ast & \ast & \ast &  \\
+												& \ast & \ast & \ast \\
+												&  & \ast & \ast
+												\end{pmatrix}
+												\]
+											</td>
+										</tr>
+										<tr>
+											<td>Path graph</td>
+											<td></td>
+											<td>Tridiagonal matrix</td>
+										</tr>
+									</table>
+								</div>
+							</div>
+
+							<div class="fragment" data-fragment-index="4">
+								<div class="typesetting">
+									<table style="font-size: 20px;">
+										<tr>
+											<td><img src="pics/cycleGreen.png" /></td>
+											<td>$\Rightarrow$</td>
+											<td>
+												\[
+												\begin{pmatrix}
+												\ast & \ast &  &  & \ast\\
+												\ast & \ast & \ast &  &  \\
+												& \ast & \ast & \ast &  \\
+												&  & \ast & \ast & \ast \\
+												\ast &  &  & \ast & \ast
+												\end{pmatrix}
+												\]
+											</td>
+										</tr>
+										<tr>
+											<td>Cycle graph</td>
+											<td></td>
+											<td>Periodic tridiag-<br />onal matrix</td>
+										</tr>
+									</table>
+								</div>
+							</div>
+						</div>
+						<div class="fragment" data-fragment-index="5">
+							<div class="typesetting">
+								<ul>
+									<li>
+										Let $\lambda=(\lambda_1<\cdots<\lambda_n)$ be <span class="blue">a simple spectrum<span>.
+									</li>
+									<li>
+										Let $M_\lambda$ be the set of all matrices with spectrum $\lambda$.
+									</li>
+									<li>
+										Let <span class="blue">$M_{\Gamma,\lambda}=M_\Gamma\cap M_\lambda$ </span>
+										be the set of all $\Gamma$-shaped matrices with spectrum $\lambda$.
+									</li>
+									<li>
+										<span class="white"> Sard's lemma: </span> if $\lambda$ is generic, then
+										$M_{\Gamma,\lambda}$ is a smooth closed manifold.
+									</li>
+									<li>
+										$\dim M_{\Gamma,\lambda}=|E_\Gamma|$.
+									</li>
+								</ul>
+							</div>
+						</div>
+
+					</section>
+					<section>
+						<div class="r-frame" style="margin-bottom:15px; margin-top:10px;">
+							<h2 class="neon">
+								References:
+							</h2>
+						</div>
+						<ul>
+							<li>
+								<span class="white">[Tridiagonal matrices]</span> C.Tomei, The topology of
+								isospectral manifolds of tridiagonal matrices, Duke Math.Journal, Vol.51:4 (1984).
+							</li>
+							<li>
+								<span class="white">[Tridiagonal matrices]</span> A.M.Bloch, R.W.Brockett, T.S.Ratiu, A new
+								formulation of the generalized Toda lattice equations and their fixed point analysis
+								via the momentum map, Bull. Amer. Math. Soc. (N.S.) 23:2 (1990), 477-485.
+							</li>
+							<li>
+								<span class="white">[Tridiagonal with zero diagonal]</span> A.V.Penskoi,
+								Integrable systems and the topology of isospectral manifolds, Theoret. and
+								Math. Phys., 155:1 (2008), 627–632.
+							</li>
+							<li>
+								<span class="white">[Staircase matrices]</span> F.De Mari, M.Pedroni, Toda flows and real
+								Hessenberg manifolds, J. Geom. Anal., 9:4 (1999), 607-625.
+							</li>
+							<li>
+								<a href="https://arxiv.org/abs/1803.01132" class="white">[Staircase matrices]</a> A.A.Ayzenberg, V.M.Buchstaber, Manifolds
+								of isospectral matrices and Hessenberg varieties, Int. Math. Res. Notices 2021:21 (2021),
+								16671-16692.
+							</li>
+							<li>
+								<a href="https://arxiv.org/abs/1803.11433" class="white">[Periodic tridiagonal matrices]</a> A.Ayzenberg, Space of isospectral
+								periodic tridiagonal matrices, Algebr. Geom. Topol. 20 (2020), 2957-2994.
+							</li>
+							<li>
+								<a href="https://arxiv.org/abs/1803.10449" class="white">[Arrowhead]</a> A.A.Ayzenberg, V.M.Buchstaber, Manifolds of
+								isospectral arrow matrices, Sbornik: Mathematics 212:5 (2021), 3-36.
+							</li>
+						</ul>
+					</section>
+
+					<section>
+						<div class="r-frame" style="margin-bottom:15px; margin-top:10px;">
+							<h2 class="neon">
+								Suggestions:
+							</h2>
+						</div>
+						It is interesting to understand sparseness types of combinatorial laplacians, and
+						their relation to topology of the simplicial complex on which the laplacian is defined.
+					</section>
+				</section>
+
+				<section>
+					<section id="QRalgorithm">
+						<div class="r-frame" style="margin-bottom:15px; margin-top:10px;">
+							<h2 class="neon">
+								QR-algorithm:
+							</h2>
+						</div>
+						<table style="margin-bottom:30px;">
+							<tr>
+								<td> Original matrix:  </td>
+								<td>
+									<table id="matrixFormQR" class="rectMatrix">
+										<tr>
+											<td><input type="text" id="a11" placeholder="1" name="a11" autocomplete="off"></td>
+											<td><input type="text" id="a12" placeholder="0" name="a12" autocomplete="off"></td>
+											<td><input type="text" id="a13" placeholder="0" name="a13" autocomplete="off"></td>
+											<td><input type="text" id="a14" placeholder="0" name="a14" autocomplete="off"></td>
+										</tr>
+										<tr>
+											<td id="a21">0</td>
+											<td><input type="text" id="a22" placeholder="1" name="a22" autocomplete="off"></td>
+											<td><input type="text" id="a23" placeholder="0" name="a23" autocomplete="off"></td>
+											<td><input type="text" id="a24" placeholder="0" name="a24" autocomplete="off"></td>
+										</tr>
+										<tr>
+											<td id="a31">0</td>
+											<td id="a32">0</td>
+											<td><input type="text" id="a33" placeholder="1" name="a33" autocomplete="off"></td>
+											<td><input type="text" id="a34" placeholder="0" name="a34" autocomplete="off"></td>
+										</tr>
+										<tr>
+											<td id="a41">0</td>
+											<td id="a42">0</td>
+											<td id="a43">0</td>
+											<td><input type="text" id="a44" placeholder="1" name="a44" autocomplete="off"></td>
+										</tr>
+									</table>
+								</td>
+
+								<td>&nbsp;</td>
+								<td width="400" style="text-align:left;">
+									At each step we represent a matrix $A_i$ as $Q\cdot R$
+									and take $A_{i+1}=R\cdot Q$. Here $Q$ is orgthogonal, $R$ is upper triangular.
+								</td>
+							</tr>
+						</table>
+
+						<table style="margin-bottom:30px;">
+							<tr>
+								<td style="text-align:right;">
+									Fill in the matrix above.<br />
+									Press <a onclick="resetMatrixFromForm();" class="blue">"u"</a> to upload.<br />
+									Press <a onclick="showQRMatrix();" class="white">"q"</a> to make QR step.<br /><br />
+									After <span class="blue" id="numberOfIters"> 0 </span> iterations:
+								</td>
+								<td>
+									<table id="iteratedMatrix" class="rectMatrix">
+										<tr>
+											<td>*</td>
+											<td>*</td>
+											<td>*</td>
+											<td>*</td>
+										</tr>
+										<tr>
+											<td>*</td>
+											<td>*</td>
+											<td>*</td>
+											<td>*</td>
+										</tr>
+										<tr>
+											<td>*</td>
+											<td>*</td>
+											<td>*</td>
+											<td>*</td>
+										</tr>
+										<tr>
+											<td>*</td>
+											<td>*</td>
+											<td>*</td>
+											<td>*</td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+						</table>
+						<div class="fragment">
+							<div class="typesetting">
+								<ul>
+									<li>
+										QR-algorithm preserves spectrum and symmetricity.
+									</li>
+									<li>
+										QR-algorithm is a cascade generated by a diffeomorphism
+										$D_{QR}\colon M_\lambda\to M_\lambda$.
+									</li>
+									<li>
+										For almost any initial matrix $A$, the limit $\lim_{k\to\infty}D_{QR}^k(A)$ is a diagonal matrix.
+									</li>
+									<li>
+										QR-algorithm preserves staircase form of a matrix. So $D_{QR}$ is a dynamical system
+										on the manifold of staircase matrices.
+									</li>
+								</ul>
+							</div>
+						</div>
+					</section>
+
+					<section>
+						<div class="r-frame" style="margin-bottom:15px; margin-top:10px;">
+							<h2 class="neon">
+								References:
+							</h2>
+						</div>
+						<ul style="margin-bottom:15px;">
+							<li>
+								<span class="white">[General book]</span> G.H.Golub, C.F.Van Loan. Matrix
+								Computations (3rd ed.). 1996. Baltimore: Johns Hopkins University Press.
+							</li>
+						</ul>
+						Also see <a href="https://en.wikipedia.org/wiki/QR_algorithm">wiki</a>.
+						Notice that QR-algorithm does not work if the sum of two eigenvalues is zero. And it works
+						awful if such sum is close to zero. In the QR-algorithm, it is required that
+						\[
+						|\lambda_1|<|\lambda_2|<\cdots<|\lambda_n|.
+						\]
+						<div class="r-frame" style="margin-bottom:15px; margin-top:10px;">
+							<h2 class="neon">
+								Suggestions:
+							</h2>
+						</div>
+						Formally speaking, I don't know a good reference, which proves that one QR step
+						is indeed a diffeomorphism of the isospectral manifold $M_\lambda$. <br/><br />
+						Tell me, if you know one.
+					</section>
+
+				</section>
+
+				<section>
+
+					<section>
+						<div class="r-frame" style="margin-bottom:15px; margin-top:10px;">
+							<h2 class="neon">
+								Flow of full symmetric Toda lattice:
+							</h2>
+						</div>
+
+						<div class="fragment" style="margin-bottom:30px;">
+							<ul style="margin-bottom:30px;">
+								<li>
+									<span class="blue">Toda flow</span> is a dynamical system with continuous time.
+								</li>
+								<li>
+									<span class="white">$\dot{A}=[A,P(A)]$</span>, where $P(A)$ is antisymmetrization of $A$.
+								</li>
+							</ul>
+							<table>
+								<tr>
+									<td style="text-align:right;">
+										This matrix is defined earlier. <br />
+										Press <a onclick="resetMatrixFromForm();" class="blue">"u"</a> to reload.<br />
+										Hold <a onclick="showTodaStep();" class="white">"t"</a> to run Toda flow.<br /><br />
+										Time: <span class="blue" id="timeFlow"> 0 </span> seconds:
+									</td>
+									<td>
+										<table id="todaFlow" class="rectMatrix">
+											<tr>
+												<td>*</td>
+												<td>*</td>
+												<td>*</td>
+												<td>*</td>
+											</tr>
+											<tr>
+												<td>*</td>
+												<td>*</td>
+												<td>*</td>
+												<td>*</td>
+											</tr>
+											<tr>
+												<td>*</td>
+												<td>*</td>
+												<td>*</td>
+												<td>*</td>
+											</tr>
+											<tr>
+												<td>*</td>
+												<td>*</td>
+												<td>*</td>
+												<td>*</td>
+											</tr>
+										</table>
+									</td>
+								</tr>
+							</table>
+						</div>
+
+
+						<div class="fragment">
+							<div class="typesetting">
+								<ul>
+									<li>
+										Toda flow <span class="blue">preserves spectrum and symmetricity</span>.
+									</li>
+									<li>
+										This is a dynamical system on the manifold $M_\lambda$.
+									</li>
+									<li>
+										If $A(t)$ is a solution, then for generic initial matrix $A(0)$,
+										the limit $\lim_{t\to\infty}A(t)$ is a diagonal matrix.
+									</li>
+									<li>
+										Toda flow <span class="blue">preserves staircase</span> form of a matrix.
+									</li>
+									<li>
+										Toda flow on $M_\lambda$ <span class="white">is a Morse gradient flow</span> of a function
+										$f\colon M_\lambda\to \mathbb{R}$, where
+										\[
+										f(A)=a_{1,1}+2a_{2,2}+\cdots+na_{n,n}
+										\]
+										(generic linear function of the main diagonal).
+									</li>
+								</ul>
+							</div>
+						</div>
+					</section>
+
+					<section>
+						<div class="r-frame" style="margin-bottom:15px; margin-top:10px;">
+							<h2 class="neon">
+								References:
+							</h2>
+						</div>
+						<ul>
+							<li>
+								<span class="white">[Open Toda lattice, dynamical]</span> J. Moser,
+								Finitely many points on the line under the influence of an exponential potential -
+								an integrable system, in Dynamical Systems, Theory and Applications,
+								Lecture Notes in Physics, 38 (1975), 467-497.
+							</li>
+							<li>
+								<span class="white">[Toda lattice and permutohedron]</span>
+								C.Tomei, The topology of isospectral manifolds of tridiagonal matrices,
+								Duke Math.Journal (1984), Vol. 51:4.
+							</li>
+							<li>
+								<span class="white">[Full symmetric Toda lattice]</span> P.Deift, T.Nanda, C.Tomei,
+								Ordinary differential equations and the symmetric eigenvalue problem, SIAM
+								J. Numer.Anal. 20:1	(1983), 1-22.
+							</li>
+							<li>
+								<span class="white">[Toda flow and relation to QR-algorithm]</span>
+								M.T.Chu, The Generalized Toda Flow, the QR Algrorithm and the Center Manifold Theory,
+								Siam J. Alg. Disc. Meth. 5:2 (1984), 187-201.
+							</li>
+							<li>
+								<span class="white">[Toda lattice on staircase matrices]</span>
+								F.De Mari, M.Pedroni, Toda flows and real Hessenberg manifolds, J. Geom. Anal.,
+								9:4 (1999), 607-625.
+							</li>
+							<li>
+								<span class="white">[Toda as Morse flow]</span>
+								A.M.Bloch, M.Gekhtman, Hamiltonian and gradient structures in the Toda flows,
+								J. Geom. Phys. 27 (1998), 230-248.
+							</li>
+							<li>
+								<span class="white">[Toda and symplectic geometry]</span>
+								A.M.Bloch, R.W.Brockett, T.S.Ratiu, A new formulation of the generalized
+								Toda lattice equations and their fixed point analysis via the momentum map,
+								Bull. Amer. Math. Soc. 23:2 (1990), 477-485.
+							</li>
+							<li>
+								<span class="white">[Morse cells, Toda flow, Bruhat decomposition]</span>
+								Yu.B.Chernyakov, G.I.Sharygin, A.S.Sorin, Bruhat Order in Full Symmetric Toda System,
+								Communications in Mathematical Physics, Vol.330:1 (2014), 367-399.
+							</li>
+						</ul>
+					</section>
+
+				</section>
+
+				<section>
+					<div class="r-frame" style="margin-bottom:5px; margin-top:10px;">
+						<h2 class="neon">
+							Diagonalizable graphs - definition:
+						</h2>
+					</div>
+					<div class="fragment" data-fragment-index="0">
+						<div class="typesetting" style="margin-bottom:30px;">
+							<span class="white">
+								Recall that $M_{\Gamma,\lambda}$ is a manifold of $\Gamma$-shaped matrices with spectrum $\lambda$.
+							</span>
+							<p class="r-frame" style="margin-bottom:15px; margin-top:15px;">
+								<span class="blue">Definition:</span> $\Gamma$ is said to
+								have diagonalizable type, if there exists a Morse-Smale flow
+								(or cascade) on $M_{\Gamma,\lambda}$, all of whose limit points are diagonal matrices.
+							</p>
+							<p>
+								There are <span class="blue">$n!$</span> diagonal matrices with spectrum $\lambda$, given by all possible permutations
+								of $\lambda_i$:
+								<span class="white">
+									\[
+									A_\sigma=\text{diag}(\lambda_{\sigma(1)},\ldots,\lambda_{\sigma(n)}),\text{ where }\sigma\in\Sigma_n.
+									\]
+								</span>
+								We want these points to be the only stationary points of the diagonalizing flow.
+							</p>
+							<p>
+								<span class="blue">
+									In other words, we want to figure out for which graphs the matrix
+									can be diagonalized within its sparseness type.
+								</span>
+							</p>
+						</div>
+					</div>
+
+					<div class="r-stack">
+						<div class="fragment fade-in-then-out" data-fragment-index="1">
+							<div class="typesetting">
+								<ul>
+									<li>
+										<span class="white">Notice that</span> relabeling vertices of $\Gamma$ permutes
+										rows and columns of the matrix.
+									</li>
+									<li>
+										Therefore relabeling $\Gamma\to\Gamma'$ gives a diffeomorphism between
+										$M_{\Gamma,\lambda}$ and $M_{\Gamma',\lambda}$.
+									</li>
+									<li>
+										Therefore, diagonalizability of a graph depends only on its isomorphism class, not
+										the labelling.
+									</li>
+								</ul>
+							</div>
+						</div>
+
+						<div class="fragment" data-fragment-index="2">
+							<div class="typesetting">
+								<table style="font-size: 20px;">
+									<tr>
+										<td><img src="pics/pathBad.png" /></td>
+										<td>$\Rightarrow$</td>
+										<td>
+											\[
+											\begin{pmatrix}
+											\ast & \ast & \ast \\
+											\ast & \ast &   \\
+											\ast &  &  \ast
+											\end{pmatrix}
+											\]
+										</td>
+										<td></td>
+										<td><img src="pics/pathGood.png" /></td>
+										<td>$\Rightarrow$</td>
+										<td>
+											\[
+											\begin{pmatrix}
+											\ast & \ast &  \\
+											\ast & \ast & \ast  \\
+											& \ast & \ast
+											\end{pmatrix}
+											\]
+										</td>
+									</tr>
+								</table>
+							</div>
+						</div>
+					</div>
+
+
+
+				</section>
+
+				<section>
+
+					<section>
+						<div class="r-frame" style="margin-bottom:5px; margin-top:10px;">
+							<h2 class="neon">
+								Indifference graphs:
+							</h2>
+						</div>
+						<div class="fragment">
+							<div class="typesetting" style="margin-bottom:30px;">
+								<p>
+									Which graphs correspond to staircase matrices?
+								</p>
+								<p class="r-frame" style="margin-bottom:15px; margin-top:15px;">
+									<span class="white">Definition:</span> Graph $\Gamma$ is called
+									<span class="blue">indifference graph</span> if it is the intersection graph
+									of some collection of unit intervals on a line $\mathbb{R}$.
+								</p>
+								<div style="text-align: center;">
+									<img src="pics/intersections.png" />
+								</div>
+								<p>
+									They are also called <span class="white">unit interval</span> graphs or
+									<span class="white">proper interval</span> graphs.
+									The term "indifference" and the notion were introduced by Roberts'69.
+									His idea was similar to <span class="blue">tolerance spaces</span> but on a line $\mathbb{R}$.
+								</p>
+							</div>
+						</div>
+						<div class="fragment">
+							<div class="typesetting" style="margin-bottom:30px;">
+								<p class="r-frame" style="margin-bottom:15px; margin-top:15px;">
+									<span class="white">Theorem (Mertzios'08): </span>
+									$\Gamma$ represents staircase matrices iff $\Gamma$ is an indifference graph.
+								</p>
+							</div>
+						</div>
+
+						<div class="fragment" style="margin-bottom:30px;">
+							<ul>
+								<li class="typesetting">
+									Indifference graphs correspond to staircase matrices.
+								</li>
+								<li class="typesetting">
+									Staircase matrices can be diagonalized by the Toda flow.
+								</li>
+								<li class="typesetting">
+									Therefore, <span class="blue">indifference graphs are diagonalizable</span>.
+								</li>
+							</ul>
+						</div>
+
+						<div class="fragment">
+							And we prove the converse.
+						</div>
+
+					</section>
+
+					<section>
+						<div class="r-frame" style="margin-bottom:15px; margin-top:10px;">
+							<h2 class="neon">
+								References:
+							</h2>
+						</div>
+						<ul>
+							<li>
+								<span class="white">[Indifference graphs]</span>
+								F.S.Roberts, On nontransitive indifference, Journal of Mathematical
+								Psychology 7 (1970), 243-258.
+							</li>
+							<li>
+								<span class="white">[Indifference and staircase matrices]</span>
+								G.B.Mertzios, A matrix characterization of interval and proper interval graphs,
+								Appl. Math. Lett. 21:4 (2008), 332-337.
+							</li>
+						</ul>
+
+						<div class="r-frame" style="margin-bottom:15px; margin-top:10px;">
+							<h2 class="neon">
+								Remarks:
+							</h2>
+						</div>
+						One can define indifference not on $\mathbb{R}$ but in any $\mathbb{R}^k$, with
+						Euclidean or Chebyshev metric. Roberts studied this notion and proved that
+						any finite graph can be realized as indifference graph in some $\mathbb{R}^k$. The
+						question about minimal such $k$ leads to some cool invariants of graphs
+						such as <a href="https://en.wikipedia.org/wiki/Boxicity" class="blue">
+							boxicity, cubicity, and sphericity
+						</a>.
+						<br /><br />
+						Anyway they are as "easy" to compute as Buchstaber invariant, you may guess.
+						<br /><br />
+						In some sense, now this activity is resurected in the study of
+						<a href="https://epubs.siam.org/doi/10.1137/16M1073170" class="white">
+							[convex neural codes]
+						</a>, C.Curto et al, What Makes a Neural Code Convex?
+						SIAM Journal on Applied Algebra and Geometry 1:1 (2017).
+					</section>
+
+				</section>
+
+				<section>
+					<section class="white">
+
+						<div class="fragment" style="text-align: center;">
+							<div class="typesetting">
+								<div class="r-frame" style="margin-bottom:15px; margin-top:40px;">
+									<h3 class="white">
+										<span class="blue">Main Theorem: </span>
+										If $\Gamma$ is diagonalizable, then $\Gamma$ is an indifference graph.
+									</h3>
+								</div>
+							</div>
+						</div>
+						<div class="fragment">
+							<div class="typesetting">
+								Plan:
+							</div>
+						</div>
+						<div class="fragment">
+							<li class="typesetting">
+								First work over $\mathbb{C}$ to simplify things:
+								consider <span class="blue">Hermitian matrices</span>.
+							</li>
+						</div>
+						<div class="fragment">
+							<li class="typesetting">
+								We prove that if $\Gamma$ is not indifference, then $M_{\Gamma,\lambda}$ does not support
+								Morse-Smale flow with $n!$ stationary points.
+							</li>
+						</div>
+						<div class="fragment">
+							<li class="typesetting">
+								Let's prove $\dim H_*(M_{\Gamma,\lambda})>n!$ and use <span class="blue"> Morse theory</span>.
+							</li>
+						</div>
+						<div class="fragment">
+							<li class="typesetting">
+								To do that, note $\chi(M_{\Gamma,\lambda})=n!$
+								(here first enters <span class="blue"> toric topology!</span>).
+							</li>
+						</div>
+						<div class="fragment">
+							<li class="typesetting">
+								So we need to prove $H_{odd}(M_{\Gamma,\lambda})\neq0$.
+							</li>
+						</div>
+						<div class="fragment">
+							<li class="typesetting">
+								This is the condition of non<span class="blue">equivariant formality</span> in toric topology.
+							</li>
+						</div>
+						<div class="fragment">
+							<li class="typesetting">
+								There are too many non-indifference graphs.
+								Luckily, we have to check only a <span class="blue"> "finite number"</span> of possibilities due to Roberts and Masuda-Panov.
+							</li>
+						</div>
+						<div class="fragment">
+							<li class="typesetting">
+								Proving $H_{odd}(M_{\Gamma,\lambda})\neq 0$ is very difficult even for particular cases.
+								Instead, we study <span class="blue">face posets</span> of torus actions on $M_{\Gamma,\lambda}$.
+							</li>
+						</div>
+						<div class="fragment">
+							<li class="typesetting">
+								We proved that whenever the action is equivariantly formal,
+								its face poset possess certain <span class="blue">acyclicity</span>.
+							</li>
+						</div>
+						<div class="fragment">
+							<li class="typesetting">
+								We describe face posets of $M_{\Gamma,\lambda}$ using <span class="blue">matroids</span>,
+								<span class="blue">graphicahedra</span>,
+								and a <span class="blue">"15"-like game</span> on a graph.
+							</li>
+						</div>
+						<div class="fragment">
+							<li class="typesetting">
+								Using <span class="blue">lab's computer</span> and <span class="blue">Sage</span>, we checked the face posets of the required graphs
+								and found out they are not acyclic.
+								This proves the theorem.
+							</li>
+						</div>
+
+					</section>
+					<section>
+						<div class="r-frame" style="margin-bottom:15px; margin-top:10px;">
+							<h2 class="neon">
+								References:
+							</h2>
+						</div>
+						If you think that Morse theory works only in the presence of Morse function,
+						you'd better read these papers of Smale.
+						<ul style="margin-bottom:15px;">
+							<li>
+								<span class="white">[Morse inequalities for dynamical systems]</span>
+								S.Smale, Morse Inequalities for a Dynamical System, Bull. Amer. Math. Soc. 66:1 (1960), 43-49.
+							</li>
+							<li>
+								<span class="white">[Morse inequalities for dynamical systems]</span>
+								S.Smale, On Gradient Dynamical Systems, Annals of Mathematics 74 (1961) 199-206.
+							</li>
+							<li>
+								<span class="white">[...and discrete time version]</span>
+								S.Smale, Differentiable dynamical systems, Bull. Amer. Math. Soc. 73:6 (1967): 747-817.
+							</li>
+						</ul>
+						You can find the fact about Euler characteristic of a space with torus action in
+						Chapter III of the classical book
+						<ul style="margin-bottom:15px;">
+							<li>
+								<span class="white">[Torus actions]</span>
+								G.E.Bredon, Introduction to compact transformation groups, Pure and Applied Mathematics V.46 (1972).
+							</li>
+						</ul>
+						Other things listed in the above slide will be covered in the following part of the presentation.
+					</section>
+				</section>
+
+				<section>
+					<section data-auto-animate class="white">
+						<div class="r-frame" style="margin-bottom:5px; margin-top:10px;">
+							<h2 class="white">
+								Torus actions on matrices:
+							</h2>
+						</div>
+
+						<ul class="fragment" style="margin-bottom:30px;">
+							<li class="typesetting">
+								From now on $M_n$, $M_\Gamma$, $M_\lambda$, $M_{\Gamma,\lambda}$ are sets of
+								<span class="blue">Hermitian matrices</span>.
+							</li>
+							<li class="typesetting">
+								Lie group $U(n)$ acts on $M_n$ <span class="blue">by conjugation</span>. This action preserves the spectrum.
+							</li>
+							<li class="typesetting">
+								Hence we have action of $U(n)$ on $M_\lambda$. This action is transitive, and its stabilizer
+								is the standard <span class="blue">torus $T=T^n$</span> of diagonal unitary matrices.
+							</li>
+							<li class="typesetting">
+								Hence $M_\lambda$ is diffeomorphic to the <span class="blue">full flag variety $Fl_n=U(n)/T$</span>.
+							</li>
+						</ul>
+
+
+						<div id="torusActs" class="fragment" style="margin-bottom:30px;">
+							<table class="noBorders">
+								<tr>
+									<td style="text-align:right;">
+										<div id="torusBox" class="torusActs" onmousemove="getTorusCoords(event)">
+											<div class="torusInterior">
+												This is a torus. <br />
+												Move cursor to pick an element and act on a matrix!
+											</div>
+										</div>
+									</td>
+									<td>
+										$\circlearrowright$
+									</td>
+									<td>
+										<table id="matrixToAct" class="rectMatrix">
+											<tr>
+												<td width="150">*</td>
+												<td width="150">*</td>
+												<td width="150">*</td>
+											</tr>
+											<tr>
+												<td>*</td>
+												<td>*</td>
+												<td>*</td>
+											</tr>
+											<tr>
+												<td>*</td>
+												<td>*</td>
+												<td>*</td>
+											</tr>
+										</table>
+									</td>
+								</tr>
+								<tr>
+									<td></td>
+									<td></td>
+									<td>
+										<a href="#QRalgorithm">You may go back to reset a matrix</a><br />
+										(I take first 3x3 block).
+									</td>
+								</tr>
+							</table>
+
+						</div>
+
+						<ul class="fragment">
+							<li class="typesetting">
+								The $T$-action on $M_\lambda$ <span class="blue">preserves $\Gamma$-shape</span> for any graph $\Gamma$.
+							</li>
+							<li class="typesetting">
+								Therefore, the torus <span class="blue">$T$ acts on $M_{\Gamma,\lambda}$</span>.
+							</li>
+						</ul>
+					</section>
+
+					<section>
+						<div class="r-frame" style="margin-bottom:15px; margin-top:10px;">
+							<h2 class="neon">
+								Remark:
+							</h2>
+						</div>
+						I don't know any good general source, where it is stated that $M_\lambda$ is diffeomorphic
+						to the full flag variety. I guess it is a common knowledge, which comes from the facts:
+
+						<ul>
+							<li>
+								<span class="white">[Abstract]</span> $U(n)$ acts transitively on $M_\lambda$ and the stabilizer is the torus $T^n$ of diagonal
+								Hermitian matrices. Hence $M_\lambda$ is the homogeneous space $U(n)/T^n$.
+							</li>
+							<li>
+								<span class="white">[Concrete]</span> Let $L_1,\ldots,L_n$ be 1-dimensional eigenspaces of $A\in M_\lambda$ corresponding to
+								eigenvalues $\lambda_1,\ldots,\lambda_n$. Then one can associate a full flag
+								\[
+								L_1\subset L_1\oplus L_2\subset L_1\oplus L_2\oplus L_3 \subset \cdots\subset \mathbb{C}^n
+								\]
+								with $A$.
+							</li>
+							<li>
+								You can consult
+								<a class="white" href="https://en.wikipedia.org/wiki/Generalized_flag_variety">[wiki]</a>,
+								if this is still unclear.
+							</li>
+							<li>
+								Finally, if you are more into computational math, I guess you'd better start
+								understanding flag manifolds, Grassmann manifolds, and other stuff like this
+								from<br />
+								<a class="white" href="https://press.princeton.edu/absil">[Algorithms on manifolds]</a>
+								P.-A. Absil, R. Mahoney, and Rodolphe Sepulchre.
+								Optimization Algorithms on Matrix Manifolds. Princeton University Press 2007.
+							</li>
+						</ul>
+					</section>
+				</section>
+
+				<section>
+
+					<section class="white">
+						<div class="r-frame" style="margin-bottom:5px; margin-top:10px;">
+							<h2 class="white">
+								Torus actions in general:
+							</h2>
+						</div>
+
+						<ul class="fragment" style="margin-bottom:15px;">
+							<li class="typesetting">
+								Let $T$ act on a manifold $X$ with nonempty finite number of fixed points.
+							</li>
+							<li class="typesetting">
+								Let $H\subseteq T$ be a connected subgroup.
+							</li>
+							<li class="typesetting">
+								<span class="red">Definition:</span> a connected component of the fixed point manifold $X^H$
+								is called <span class="blue">an invariant submanifold</span>.
+							</li>
+							<li class="typesetting">
+								<span class="red"> Definition:</span> if an invariant submanifold intersects $X^T$,
+								it is called a <span class="blue">face submanifold</span>.
+							</li>
+						</ul>
+
+						<div class="fragment">
+							<div class="typesetting" style="margin-bottom:15px;">
+								<p class="r-frame">
+									<span class="red">Definition:</span> $X$ is called equivariantly formal if $H^{odd}(X)=0$.
+								</p>
+							</div>
+						</div>
+						<div class="fragment">
+							<div class="typesetting" style="margin-bottom:15px;">
+								<div class="r-frame">
+									<span class="red">Lemmata (Masuda-Panov'06):</span> If $X$ is
+									equivariantly formal, then we have:
+									<ul>
+										<li>
+											Every invariant submanifold of $X$ is a face submanifold.
+										</li>
+										<li>
+											Every face submanifold of $X$ is equivariantly formal.
+										</li>
+									</ul>
+								</div>
+							</div>
+							<div class="typesetting" style="margin-bottom:15px;">
+								<ul>
+									<li>
+										If some face submanifold of $X$ is not equivariantly formal, then $X$ is
+										not equivariantly formal as well.
+									</li>
+								</ul>
+							</div>
+						</div>
+
+						<div class="fragment">
+							<div class="typesetting">
+								<div class="r-frame" style="margin-bottom:15px;">
+									<span class="red">Proposition:</span> All face submanifolds of $M_{\Gamma,\lambda}$
+									have the form $M_{\Gamma',\lambda'}$, where $\Gamma'$ is an induced subgraph of $\Gamma$.
+								</div>
+								<ul>
+									<li>
+										<span class="red">Corollary:</span> If $\Gamma$ has non-diagonalizable
+										induced subgraph, then $\Gamma$ is also non-diagonalizable.
+									</li>
+								</ul>
+							</div>
+						</div>
+					</section>
+
+					<section class="white">
+						<div class="r-frame" style="margin-bottom:15px; margin-top:10px;">
+							<h2 class="neon">
+								References:
+							</h2>
+						</div>
+						<div style="margin-bottom:15px;">
+							Strictly speaking a $T$-action is called equivariantly formal if its Serre spectral sequence
+							$E_2^{p,q}\cong H^p(BT)\otimes H^q(X)\Rightarrow H^{p+q}_T(X)$
+							degenerates at the second page. This spectral sequence is induced by the Serre filtration
+							$p\colon X_T\stackrel{X}{\to} BT$, where $X_T=X\times_TET$ is the Borel construction
+							and $H^*_T(X)=H^*(X_T)$ is the equivariant cohomology module.<br /><br />
+							For the fact that equivariant formality is equivalent to $H^{odd}(X)=0$ under
+							assumption of isolated fixed points see
+							Masuda-Panov, Lm.2.1. Also important characterizations of formality and some missing details
+							can be found in Franz-Puppe.
+						</div>
+						<ul style="margin-bottom:15px;">
+							<li>
+								<a href="https://arxiv.org/abs/math/0306100" class="blue">[Torus manifolds]</a>
+								M.Masuda, T.Panov, On the cohomology of torus manifolds, Osaka J. Math. 43 (2006), 711-746.
+							</li>
+							<li>
+								<a href="https://arxiv.org/abs/math/0505607v2" class="blue">[Formality and freeness of equiv.cohomology]</a>
+								M.Franz, V.Puppe, Exact cohomology sequences with integral coefficients for torus actions,
+								Transformation Groups 12 (2007), 65-76.
+							</li>
+							<li>
+								<span class="blue">[Mutants]</span>
+								M.Franz, V.Puppe, Freeness of equivariant cohomology and mutants of
+								compactified representations, in Contemporary Mathematics 460 "Toric Topology".
+							</li>
+						</ul>
+						<div style="margin-bottom:15px;">
+							The last paper shows that condition $H^{odd}(X)=0$ is not always equivalent to equivariant
+							formality if fixed points are not isolated.
+						</div>
+					</section>
+
+					<section class="white">
+						<div class="r-frame" style="margin-bottom:15px; margin-top:10px;">
+							<h2 class="neon">
+								References:
+							</h2>
+						</div>
+						<div style="margin-bottom:15px;">
+							The proposition that face submanifolds of $M_{\Gamma,\lambda}$ are
+							again the isospectral matrix spaces for induced subgraphs, is a good exercise for the
+							reader. Although you can find it in our paper.
+						</div>
+						<ul style="margin-bottom:15px;">
+							<li>
+								<span class="blue">[Main]</span>
+								A.Ayzenberg, K.Sorokin, Topological approach to diagonalization algorithms, 2022, preprint:
+								<a href="https://arxiv.org/abs/2204.06111">arXiv:2204.06111</a>.
+							</li>
+						</ul>
+					</section>
+				</section>
+
+				<section>
+
+					<section>
+						<div class="r-frame" style="margin-bottom:5px; margin-top:10px;">
+							<h2 class="neon">
+								Forbidden subgraphs:
+							</h2>
+						</div>
+						<div class="fragment">
+							<div class="typesetting" style="margin-bottom:30px;">
+								<p>
+									<span class="red">Corollary:</span> If $\Gamma$ has non-diagonalizable
+									induced subgraph, then $\Gamma$ is also non-diagonalizable.
+								</p>
+								<table>
+									<tr>
+										<td>
+											<img src="pics/induced.png">
+										</td>
+										<td>
+											<img src="pics/noninduced.png">
+										</td>
+									</tr>
+									<tr>
+										<td>
+											Induced subgraph.
+										</td>
+										<td>
+											Not an induced subgraph.
+										</td>
+									</tr>
+								</table>
+							</div>
+						</div>
+						<div class="fragment">
+							<div class="typesetting" style="margin-bottom:30px;">
+								<div class="r-frame">
+									<span class="red">Theorem (Roberts'70):</span> $\Gamma$ is an indifference graph iff it
+									does not have the following induced subgraphs:
+								</div>
+								<table>
+									<tr>
+										<td>
+											<img src="pics/robertsClaw.png">
+										</td>
+										<td>
+											<img src="pics/robertsCy.png">
+										</td>
+										<td>
+											<img src="pics/robertsNet.png">
+										</td>
+										<td>
+											<img src="pics/robertsSun.png">
+										</td>
+									</tr>
+									<tr>
+										<td>
+											Claw $St_3$
+										</td>
+										<td>
+											Holes $Cy_k$, $k\geq 4$
+										</td>
+										<td>
+											$Net$
+										</td>
+										<td>
+											$Sun$
+										</td>
+									</tr>
+								</table>
+							</div>
+						</div>
+						<div class="fragment">
+							<div class="typesetting" style="margin-bottom:30px;">
+								<p>
+									We only need to prove that manifolds $M_{\Gamma,\lambda}$ corresponding to these graphs, are
+									not equivariantly formal.
+								</p>
+							</div>
+						</div>
+					</section>
+
+					<section>
+						<div class="r-frame" style="margin-bottom:15px; margin-top:10px;">
+							<h2 class="neon">
+								References:
+							</h2>
+						</div>
+						<ul style="margin-bottom:20px;">
+							<li>
+								<span class="white">[Roberts]</span>
+								F.Roberts, Indifference graphs, in: F.Harary (ed.),
+								Proof Techniques in Graph Theory, Academic Press, New York, 1969, 139-146.
+							</li>
+							<li>
+								<span class="white">[See Exercise 3.12]</span>
+								T.A.McKee, F.R.McMorris, Topics in Intersection Graph Theory,
+								SIAM Monographs on Discrete Mathematics and Applications, 1999.
+							</li>
+							<li>
+								<a href="https://en.wikipedia.org/wiki/Indifference_graph" class="white">[Wiki]</a>
+								I believe wikipedia is a cool spot to learn graph theory. I found lots
+								of useful references there.
+							</li>
+						</ul>
+
+						<div class="r-frame" style="margin-bottom:15px; margin-top:10px;">
+							<h2 class="neon">
+								Suggestions:
+							</h2>
+						</div>
+						<div style="margin-bottom:10px;">
+							There is a paper:
+						</div>
+						<ul style="margin-bottom:10px;">
+							<li>
+								<a href="https://www.liebertpub.com/doi/10.1089/cmb.1995.2.139" class="white">[DNA]</a>
+								P.W.Goldberg, M.C.Golumbic, H.Kaplan, R.Shamir,
+								Four Strikes Against Physical Mapping of DNA, Journal of Computational Biology 2:1 (2009).
+							</li>
+						</ul>
+						<div style="margin-bottom:10px;">
+							which relates DNA search problems to indifference graphs. I guess, one can make
+							a cool work by relating genetics to toric topology via indifference graphs.
+						</div>
+					</section>
+
+				</section>
+
+				<section>
+					<section class="white">
+						<div class="r-frame" style="margin-bottom:5px; margin-top:10px;">
+							<h2 class="white">
+								Complexity and weights:
+							</h2>
+						</div>
+
+						<ul class="fragment" style="margin-bottom:20px;">
+							<li class="typesetting">
+								Let $T=T^k$ act on $X=X^{2n}$ effectively with isolated fixed points.
+							</li>
+							<li class="typesetting">
+								The number $n-k$ is called <span class="blue">the complexity</span> of the action.
+							</li>
+							<li class="typesetting">
+								We always have complexity $\geq 0$.
+							</li>
+						</ul>
+						<ul class="fragment">
+							<li class="typesetting">
+								For the action of $T$ on $M_{\Gamma,\lambda}$ complexity equals <span class="blue">$|E_\Gamma|-n+1=\beta_1(\Gamma)$</span>.
+							</li>
+						</ul>
+						<ul class="fragment" style="margin-bottom:20px;">
+							<li class="typesetting">
+								In particular, <span class="blue">trees $\Gamma$</span> give actions of
+								<span class="red">complexity $0$</span>.
+							</li>
+						</ul>
+
+						<ul class="fragment" style="margin-bottom:20px;">
+							<li class="typesetting">
+								Manifolds of complexity $0$ are well studied. They include smooth
+								<span class="neon">toric varieties</span>,
+								<span class="neon">quasitoric manifolds</span> by Davis-Januszkiewicz,
+								<span class="neon">torus manifolds</span> by Hattori-Masuda.
+							</li>
+							<li class="typesetting">
+								Orbit spaces $X/T$ of complexity $0$ actions are <span class="blue">manifolds with corners</span>.
+							</li>
+							<li class="typesetting">
+								There is a criterion of equivariant formality of complexity $0$ actions.
+							</li>
+						</ul>
+
+						<table class="fragment">
+							<tr class="typesetting" style="width:500px;">
+								<td style="text-align:left;">
+									<div class="r-frame" style="margin-bottom:20px;">
+										<span class="red">Theorem (Masuda-Panov'06):</span> Manifold $X$ of complexity $0$ is equivariantly
+										formal iff its orbit space is a <span class="blue">homology polytope</span>.
+									</div>
+									This means that $X$ should be <span class="blue">acyclic</span>, and all its faces should be acyclic.
+								</td>
+								<td style="text-align:left;">
+									<model-viewer style="height:200px;" src="assets/polyhedron.glb" camera-controls enable-pan></model-viewer>
+								</td>
+							</tr>
+						</table>
+					</section>
+
+					<section class="white">
+						<div class="r-frame" style="margin-bottom:15px; margin-top:10px;">
+							<h2 class="neon">
+								References:
+							</h2>
+						</div>
+
+						<ul style="margin-bottom:15px;">
+							<li>
+								<span class="blue">[Complexity of matrix manifolds]</span>
+								A.Ayzenberg, V.Buchstaber, Cluster-permutohedra and submanifolds of
+								flag varieties with torus actions, 2022, preprint:
+								<a href="https://arxiv.org/abs/2203.14133">arXiv:2203.14133</a>.
+							</li>
+							<li>
+								<span class="blue">[Toric varieties]</span>
+								D.A.Cox, J.B.Little, H.Schenck. Toric varieties, AMS, 2011.
+							</li>
+							<li>
+								<span class="blue">[Toric manifolds]</span>
+								M.Davis, T.Januszkiewicz, Convex polytopes, Coxeter orbifolds and torus actions,
+								Duke Math. J. 62:2 (1991).
+							</li>
+							<li>
+								<span class="blue">[Torus manifolds]</span>
+								A.Hattori, M.Masuda, Elliptic genera, torus manifolds and multi-fans, Internat.
+								J. of Math. 16:9 (2005).
+							</li>
+							<li>
+								<span class="blue">[Quasitoric manifolds]</span>
+								V.Buchstaber, T.Panov. Toric Topology. Math. Surveys Monogr.204, AMS, 2015.
+							</li>
+							<li>
+								<a href="https://arxiv.org/abs/math/0306100" class="blue">[Criterion for torus manifolds]</a>
+								M.Masuda, T.Panov, On the cohomology of torus manifolds, Osaka J. Math. 43 (2006), 711-746.
+							</li>
+
+						</ul>
+					</section>
+
+				</section>
+
+				<section>
+					<section class="white">
+						<div class="r-frame" style="margin-bottom:5px; margin-top:10px;">
+							<table>
+								<tr>
+									<td>
+										<h2 class="white">
+											Case: $St_3$
+										</h2>
+									</td>
+									<td>
+										<img src="pics/robertsClaw.png">
+									</td>
+									<td>
+										\[
+										\begin{pmatrix}
+										\ast & \ast & \ast & \ast \\
+										\ast & \ast &  &  \\
+										\ast &  & \ast &  \\
+										\ast &  &  & \ast
+										\end{pmatrix}
+										\]
+									</td>
+								</tr>
+							</table>
+						</div>
+						<ul class="fragment">
+							<li class="typesetting">
+								We learned about such matrices and corresponding from Tadeusz Januskiewicz in 2016.
+							</li>
+							<li class="typesetting">
+								Using <span class="blue">Cauchy interlacing law</span>, one can prove
+							</li>
+						</ul>
+
+						<table class="fragment" style="margin-bottom: 20px;">
+							<tr>
+								<td class="typesetting" style="width:650px; text-align:left;">
+									<div class="r-frame" style="margin-bottom: 15px;">
+										<span class="red">Theorem (Gal-Januszkiewicz, unpublished):</span>
+										$M_{St_3,\lambda}/T$ is a solid torus with boundary subdivided into hexagons.
+									</div>
+									Therefore, from Masuda-Panov theorem it follows that <br />
+									<span class="blue">$M_{St_3,\lambda}$ is not equivariantly formal</span>.
+								</td>
+								<td>
+									<div class="r-frame">
+										<img src="pics/animatedTorus.gif" style="width:200px;">
+									</div>
+								</td>
+							</tr>
+						</table>
+
+						<ul class="fragment">
+							<li class="typesetting">
+								In joint work with Buchstaber, we computed Betti numbers
+								\[
+								\beta(M_{St_3,\lambda})=(1,1,12,0,12,1,1).
+								\]
+							</li>
+							<li class="typesetting">
+								We also described homotopy types of $M_{St_n,\lambda}/T$ for any star graph $St_n$...
+							</li>
+							<li class="typesetting">
+								and introduced the notion of cluster-permutohedron to describe its combinatorics.
+							</li>
+						</ul>
+					</section>
+
+					<section class="white">
+						<div class="r-frame" style="margin-bottom:15px; margin-top:10px;">
+							<h2 class="neon">
+								References:
+							</h2>
+						</div>
+
+						<ul style="margin-bottom:15px;">
+							<li>
+								<a href="https://arxiv.org/abs/math/0502408" class="blue">[Cauchy interlacing law, see e.g.]</a>
+								S.Fisk, A very short proof of Cauchy's interlace theorem for eigenvalues
+								of Hermitian matrices, Amer. Math. Monthly 112:2 (2005).
+							</li>
+							<li>
+								<a href="http://www.mathnet.ru/php/archive.phtml?wshow=paper&jrnid=sm&paperid=9381&option_lang=eng" class="blue">[Topology of arrow matrices]</a>,
+								A.A.Ayzenberg, V.M.Buchstaber,
+								Manifolds of isospectral arrow matrices, Sbornik: Mathematics 212:5 (2021).
+							</li>
+						</ul>
+						<div style="margin-bottom:10px;">
+							One of our results is that the quotient $M_{St_n,\lambda}/T$ is homotopy
+							equivalent to the cubical skeleton of $(n-1)$-dim permutohedron. This is the union
+							of faces of $Pe^{n-1}$ which are combinatorial cubes. This space seems to
+							be quite complicated as $n$ increases.
+						</div>
+					</section>
+
+					<section class="white">
+						<div class="r-frame" style="margin-bottom:15px; margin-top:10px;">
+							<h2 class="neon">
+								More references:
+							</h2>
+						</div>
+
+						<div style="margin-bottom:10px;">
+							To describe Betti numbers of the particular space $M_{St_3,\lambda}/T$ I used my
+							previous results, which relate toric topology of complexity 0 to h'- and h''-numbers.
+						</div>
+						<ul style="margin-bottom:15px;">
+							<li>
+								<a href="https://arxiv.org/abs/1501.04768" class="blue">[Sheaves and spectral sequences]</a>,
+								A.Ayzenberg, Locally standard torus actions and sheaves over Buchsbaum posets,
+								Sbornik: Mathematics (2017) 208:9, 3-25.
+							</li>
+							<li>
+								<a href="https://arxiv.org/abs/1501.07016" class="blue">[Spectral sequences and h'-numbers]</a>
+								A.Ayzenberg, Locally standard torus actions and h'-vectors of
+								simplicial posets, J. Math. Soc. Japan 68:4 (2016), 1-21.
+							</li>
+							<li>
+								<a href="https://arxiv.org/abs/1502.01130" class="blue">[Geometric interpretation of homology]</a>,
+								A.Ayzenberg, Homology cycles in manifolds with locally standard torus actions,
+								Homology, Homotopy Appl. 18:1 (2016), 1-23.
+							</li>
+							<li>
+								<a href="https://arxiv.org/abs/1407.0764" class="blue">[Equivariant cohomology]</a>,
+								A.Ayzenberg, M.Masuda, S.Park, H.Zeng, Cohomology of toric origami manifolds with acyclic
+								proper faces, J. Symplectic Geom. (2017) 15:3, 645-685.
+							</li>
+							<li>
+								<a href="https://arxiv.org/abs/1502.05499" class="blue">[h''-numbers and PDA of manifolds with boundary]</a>,
+								A.Ayzenberg, Topological model for h''-vectors of simplicial manifolds,
+								Bol. Soc. Mat. Mexicana (2016), 1-9.
+							</li>
+							<li>
+								<a href="https://arxiv.org/abs/1509.03008" class="blue">[Cohomology and volume polynomials]</a>,
+								A.Ayzenberg, M.Masuda, Volume polynomials and duality algebras of multi-fans,
+								Arnold Math. J. (2016), 2:3, 329-381.
+							</li>
+						</ul>
+					</section>
+
+					<section class="white">
+
+						<div class="r-frame" style="margin-bottom:15px; margin-top:10px;">
+							<h2 class="neon">
+								Suggestions:
+							</h2>
+						</div>
+
+						<ul style="margin-bottom:15px;">
+							<li>
+								<a href="https://www.sciencedirect.com/science/article/pii/0021999190901773" class="blue">[Fermi liquid]</a>
+								D.P.O'Leary, G.W.Stewart, Computing the eigenvalues and eigenvectors of
+								symmetric arrowhead matrices, Journal of Computational Physics 90:2 (1990).
+							</li>
+							<li>
+								<a href="https://www.sciencedirect.com/science/article/pii/S0024379513006265?via%3Dihub" class="blue">[Algorithms]</a>
+								N.J.Stor, I.Slapničar, J.L.Barlow, Accurate eigenvalue decomposition
+								of real symmetric arrowhead matrices and applications, Linear Algebra and its Applications
+								464:1 (2015).
+							</li>
+						</ul>
+
+						<div style="margin-bottom:10px;">
+							It would be nice to find applications of toric topology methods in physics
+							and quantum mechanics.
+						</div>
+						<div style="margin-bottom:10px;">
+							We suppose that the space $M_{St_n,\lambda}$ is "the most complicated" among all
+							isospectral manifolds, hence it should be difficult to diagonalize arrowhead matrices
+							for topological reasons. It is better to compare with the computational paper above.
+						</div>
+					</section>
+
+				</section>
+
+				<section class="white">
+					<div class="r-frame" style="margin-bottom:5px; margin-top:10px;">
+						<table>
+							<tr>
+								<td>
+									<h2 class="white">
+										Case: $Cy_k$, $k\geq 4$
+									</h2>
+								</td>
+								<td>
+									<img src="pics/robertsCy.png">
+								</td>
+								<td>
+									\[
+									\begin{pmatrix}
+									\ast & \ast &  & \ast \\
+									\ast & \ast & \ast  &  \\
+									& \ast & \ast & \ast \\
+									\ast &  & \ast & \ast
+									\end{pmatrix}
+									\]
+								</td>
+							</tr>
+						</table>
+					</div>
+
+					<div class="r-stack" style="margin-bottom:15px; text-align:left;">
+						<div class="fragment fade-in-then-out">
+							<div class="typesetting">
+								Torus action has complexity one.
+							</div>
+						</div>
+						<div class="fragment fade-in-then-out">
+							<div class="typesetting">
+								We (A.+Masuda+Cherepanov) developed a theory for complexity one actions.
+							</div>
+						</div>
+						<div class="fragment">
+							<div class="typesetting">
+								Here are a few more toric definitions:
+							</div>
+						</div>
+					</div>
+					<ul class="fragment" style="margin-bottom:15px;">
+						<li class="typesetting">
+							Let $T=T^k$ act on $X=X^{2n}$, and $x\in X^T$ be a fixed point.
+						</li>
+						<li class="typesetting">
+							Consider the tangent representation $T_xX$ of a torus.
+						</li>
+						<li class="typesetting">
+							We have a decomposition into 2-dimensional real representations
+							\[
+							T_xX\cong V(\alpha_{1})\oplus\cdots\oplus V(\alpha_n),
+							\]
+							where $\alpha_1,\ldots,\alpha_n\in \text{Hom}(T,T^1)\cong \mathbb{Z}^k$ are
+							called <span class="blue">the tangent weights</span> at $x$.
+						</li>
+					</ul>
+					<div class="fragment" style="margin-bottom:15px;">
+						<div class="typesetting">
+							<div class="r-frame">
+								<span class="neon">Definition:</span> An action is called
+								<span class="blue">$j$-independent</span> if,
+								at any fixed point $x$, any $\leq j$ of the tangent weights are linearly independent.
+							</div>
+						</div>
+					</div>
+					<ul class="fragment" style="margin-bottom:15px;">
+						<li class="typesetting">
+							<span class="neon">Example:</span> every complexity $0$ action of $T^n$ on $X^{2n}$
+							is <span class="blue">$\infty$-independent</span>.
+						</li>
+						<li class="typesetting">
+							<span class="red">Proposition:</span> if $g$ is the <span class="blue">girth</span>
+							of $\Gamma$, then the action on $M_{\Gamma,\lambda}$ is
+							<span class="blue">$(g-1)$-independent</span>.
+						</li>
+					</ul>
+
+				</section>
+
+				<section>
+
+					<section class="white">
+						<div class="r-frame" style="margin-bottom:5px; margin-top:10px;">
+							<table>
+								<tr>
+									<td>
+										<h2 class="white">
+											Case: $Cy_k$, $k\geq 4$
+										</h2>
+									</td>
+									<td>
+										<img src="pics/robertsCy.png">
+									</td>
+									<td>
+										\[
+										\begin{pmatrix}
+										\ast & \ast &  & \ast \\
+										\ast & \ast & \ast  &  \\
+										& \ast & \ast & \ast \\
+										\ast &  & \ast & \ast
+										\end{pmatrix}
+										\]
+									</td>
+								</tr>
+							</table>
+						</div>
+
+						<div style="margin-bottom:15px; text-align:center">
+							Here are a few more toric definitions:
+						</div>
+
+						<div class="fragment" style="margin-bottom:30px;">
+							<div class="typesetting">
+								<div class="r-frame">
+									<span class="neon">Definition:</span> Complexity one action of $T^{n-1}$ on $X^{2n}$
+									is called an <span class="blue">action in general position</span>, if it is
+									$(n-1)$-independent.
+								</div>
+							</div>
+						</div>
+
+						<div class="fragment">
+							<div class="typesetting" style="margin-bottom:15px;">
+								Since girth of $Cy_n$ equals $n$, the action on $M_{Cy_n,\lambda}$ is
+								a complexity one action in general position.
+							</div>
+						</div>
+
+						<div class="fragment" style="margin-bottom:20px;">
+							<div class="typesetting" style="margin-bottom:20px;">
+								<div class="r-frame">
+									<span class="red">Theorem (A.-Masuda'19):</span> If an action of $T$ on $X$
+									is an equivariantly formal of complexity one in general position, then $X/T$ is
+									a homology sphere.
+								</div>
+							</div>
+							<div class="typesetting">
+								If, moreover, $\pi_1(X)=1$, then $X/T\cong S^{n+1}$ according to
+								<span class="red">Poincar&eacute; conjecture</span>.
+							</div>
+						</div>
+						<div class="fragment">
+							<div class="typesetting">
+								Theorem above generalizes several known results:
+								<span class="blue">Buchstaber-Terzic'14:</span>
+								$Gr_{4,2}/T^3\cong S^5$ and $Fl_3/T^2\cong S^4$,
+								<span class="blue">Karshon-Tolman'18</span> on hamiltonian actions,
+								and it is also related to <span class="blue">Arnold's result'99:</span>
+								$\mathbb{H}P^2/T^1\cong S^7$ (quaternionic version of Kuiper-Massey theorem).
+							</div>
+						</div>
+
+					</section>
+
+					<section class="white">
+						<div class="r-frame" style="margin-bottom:15px; margin-top:10px;">
+							<h2 class="neon">
+								References about complexity 1:
+							</h2>
+						</div>
+						<ul>
+							<li>
+								<a href="https://arxiv.org/abs/1802.08828" class="blue">[Complexity 1, general position]</a>
+								A.Ayzenberg, Torus actions of complexity one and their local properties,
+								Proc. Steklov Inst. Math. 302 (2018).
+							</li>
+							<li>
+								<a href="https://arxiv.org/abs/1905.02294" class="blue">[Complexity 1, matrix manifolds]</a>
+								V.Cherepanov, Orbit spaces for torus actions on Hessenberg varieties,
+								Sbornik: Mathematics 212:12 (2021).
+							</li>
+							<li>
+								<a href="https://arxiv.org/abs/1905.04761" class="blue">[Complexity 1, nongeneral position]</a>
+								A.Ayzenberg, V.Cherepanov, Torus actions of complexity one in non-general position,
+								Osaka Journal of Mathematics 58:4 (2021).
+							</li>
+							<li>
+								<a href="https://arxiv.org/abs/1912.11696" class="blue">[Complexity 1, general position, formal]</a>
+								A.Ayzenberg, M.Masuda, Orbit spaces of equivariantly formal torus actions, 2019,
+								preprint <a href="https://arxiv.org/abs/1912.11696">arXiv:1912.11696</a>.
+							</li>
+							<li>
+								<a href="https://link.springer.com/article/10.1007/s40598-020-00166-4" class="blue">[Quaternionic plane, spectrahedra]</a>
+								A.Ayzenberg, Torus action on quaternionic projective plane and related spaces,
+								Arnold Math. J. 7 (2021).
+							</li>
+							<li>
+								<a href="https://arxiv.org/abs/1410.2482" class="blue">[Grassmann]</a>
+								V.M. Buchstaber, S.Terzic, Topology and
+								geometry of the canonical action of $T^4$ on the complex
+								Grassmannian $G_{4,2}$ and the complex projective space $\mathbb{C}P^5$,
+								Moscow Mathematical Journal, 16:2 (2016).
+							</li>
+							<li>
+								<a href="https://arxiv.org/abs/1810.01026" class="blue">[Complexity 1, Hamiltonian]</a>
+								Y.Karshon, S.Tolman, Topology of complexity one quotients,
+								Pacific Journal of Mathematics 308:2 (2020).
+							</li>
+							<li>
+								<a href="https://www.semanticscholar.org/paper/Relatives-of-the-Quotient-of-the-Complex-Projective-Arnold/8d21df4dad5f2f1a11ef17d70b3cacc0a3204d14" class="blue">[Arnold]</a>
+								V.I.Arnold, Relatives of the quotient of the complex projective plane by complex conjugation,
+								Proc. Steklov Inst. Math. 224 (1999).
+							</li>
+						</ul>
+					</section>
+
+					<section class="white">
+						<div class="r-frame" style="margin-bottom:15px; margin-top:10px;">
+							<h2 class="neon">
+								Something weird:
+							</h2>
+						</div>
+						<div style="margin-bottom:15px;">
+							I found that my paper on torus action on quaternionic projective plane was
+							cited in
+						</div>
+						<ul style="margin-bottom:15px;">
+							<li>
+								<a href="https://www.mdpi.com/2673-4125/1/1/4" class="blue">[Brain]</a>
+								A.Tozzi et.al., Nervous Activity of the Brain in Five Dimensions,
+								Biophysica 1 (2021).
+							</li>
+						</ul>
+						<div style="margin-bottom:15px;">
+							with formulation <span class="neon">
+								"In recent years, technical improvements to avoid
+								non-commutativity have made quaternions feasible to explore quantum mechanics,
+								attitude control, computer graphics, and robust image hashing".
+							</span> <br /><br />
+							Strange, but ok. I don't understand how academical science works.
+						</div>
+					</section>
+
+				</section>
+
+				<section>
+
+					<section>
+						<div class="r-frame" style="margin-bottom:5px; margin-top:10px;">
+							<table>
+								<tr>
+									<td>
+										<h2>
+											Case: $Cy_k$, $k\geq 4$
+										</h2>
+									</td>
+									<td>
+										<img src="pics/robertsCy.png">
+									</td>
+									<td>
+										\[
+										\begin{pmatrix}
+										\ast & \ast &  & \ast \\
+										\ast & \ast & \ast  &  \\
+										& \ast & \ast & \ast \\
+										\ast &  & \ast & \ast
+										\end{pmatrix}
+										\]
+									</td>
+								</tr>
+							</table>
+						</div>
+
+						<div class="fragment" style="margin-bottom:15px; text-align:center">
+							<div class="typesetting">
+								Back to periodic matrices:
+							</div>
+						</div>
+
+						<ul class="fragment" style="margin-bottom:30px;">
+							<li class="typesetting">
+								Periodic tridiagonal matrices appeared in relation with periodic Toda flow
+								and <span class="red">discretized Schr&#246;dinger equation</span>.
+							</li>
+							<li class="typesetting">
+								There exists <span class="blue">periodic Toda flow on $M_{Cy_k,\lambda}$</span>.
+							</li>
+							<li class="typesetting">
+								Its integrability aspects were studied by van Moerbeke'76 and Krichever'85. Based on their
+								results, we prove
+							</li>
+						</ul>
+
+						<div class="fragment" style="margin-bottom:30px;">
+							<div class="typesetting" style="margin-bottom:30px;">
+								<div class="r-frame">
+									<span class="blue">Theorem (A.'18):</span> The orbit space
+									$M_{Cy_k,\lambda}/T$ is homeomorphic to <span class="white">$S^4\times T^{k-3}$</span>.
+								</div>
+							</div>
+							<div class="typesetting">
+								The torus component in the orbit space originates from
+								<span class="red">Liouville-Arnold tori</span> of the
+								periodic Toda flow.
+							</div>
+						</div>
+
+						<div class="white">
+							<div class="fragment">
+								<div class="typesetting">
+									$M_{Cy_k,\lambda}$ is not equivariantly formal for $k\geq 4$ because its orbit space
+									is not a sphere.
+								</div>
+							</div>
+						</div>
+
+					</section>
+
+					<section>
+						<div class="r-frame" style="margin-bottom:15px; margin-top:10px;">
+							<h2 class="neon">
+								References:
+							</h2>
+						</div>
+						<ul>
+							<li>
+								<span class="white">[It all started with]</span>
+								M.Toda, Vibration of a chain with a non-linear interaction, J. Phys. Soc. Jpn., 22:2 (1967).
+							</li>
+							<li>
+								<span class="white">[Periodic Toda lattice]</span>
+								P. van Moerbeke, The Spectrum of Jacobi Matrices, Inventiones math. 37 (1976).
+							</li>
+							<li>
+								<span class="white">[Periodic Toda lattice, in particular]</span>
+								I.Krichever, Nonlinear equations and elliptic curves, Journal of Soviet Mathematics 28:1 (1985).
+							</li>
+							<li>
+								<a href="https://arxiv.org/abs/hep-th/0010184" class="white">[Toda lattice, more modern]</a>
+								I.Krichever, K.L.Vaninsky, The periodic and open Toda lattice,
+								Mirror Symmetry IV, AMS/IP 33 (2002).
+							</li>
+							<li>
+								<a href="https://arxiv.org/abs/1803.11433" class="white">[Topology of periodic Toda]</a>
+								A.Ayzenberg, Space of isospectral periodic tridiagonal matrices,
+								Algebraic and Geometric Topology 20 (2020).
+							</li>
+						</ul>
+					</section>
+
+					<section>
+						<div class="r-frame" style="margin-bottom:15px; margin-top:10px;">
+							<h2 class="neon">
+								Suggestions:
+							</h2>
+						</div>
+						It is interesting to describe all matrix shapes, which support some analogue of Toda flow
+						(either open or closed). This is solved in
+						<ul style="margin-bottom:10px; margin-top:10px;">
+							<li>
+								<span class="white">[Cyclic Toda]</span>
+								N.Khoroshavkina, Graph theory in the study of Toda flows, bachelor thesis,
+								Math.Fac. HSE, 2022.
+							</li>
+						</ul>
+						It is proved that such matrices correspond to proper
+						<span class="red">circular arc graphs</span>. In some
+						sense, this corresponds to "cyclic time" as opposed to "linear time" appearing in
+						staircase matrices. I guess one can apply Morse-Novikov theory to study topology
+						of such matrices.<br /><br />
+						This is also somehow related to <span class="red">cicrular Dyck paths</span>, studied in
+						<ul style="margin-bottom:10px; margin-top:10px;">
+							<li>
+								<span class="white">[Circular Dyck paths]</span>
+								P.Alexandersson, G.Panova, LLT polynomials, chromatic quasisymmetric
+								functions and graphs with cycles, Discrete Mathematics, 341:12 (2018).
+							</li>
+						</ul>
+						which is embedded in the context of e-positivity, Stanley-Stembridge conjecture,
+						Shareshian-Wachs (already not a) conjecture. One can make a good work by applying topological
+						consequences of generalized periodic Toda flows in
+						<span class="red">the representation theory</span>.<br /><br />
+
+						Yet another intriguing direction of research is the relation of periodic Toda flows
+						to <span class="red">
+							infinite-dimensional (and somehow periodic) flag varieties, affine Lie algebras,
+							and string theory.
+						</span>
+					</section>
+				</section>
+
+				<section>
+
+					<section class="white">
+						<div class="r-frame" style="margin-bottom:5px; margin-top:10px;">
+							<table>
+								<tr>
+									<td>
+										<h2 class="white">
+											Cases:
+										</h2>
+									</td>
+									<td>
+										<table>
+											<tr>
+												<td>
+													<img src="pics/robertsNet.png">
+												</td>
+												<td>
+													<img src="pics/robertsSun.png">
+												</td>
+											</tr>
+											<tr>
+												<td>
+													<h2 class="white">
+														$Net$
+													</h2>
+												</td>
+												<td>
+													<h2 class="white">
+														$Sun$
+													</h2>
+												</td>
+											</tr>
+										</table>
+									</td>
+									<td>
+										\[
+										\begin{pmatrix}
+										\ast & \ast & \ast & \ast &  &  \\
+										\ast & \ast & \ast &  & \ast &  \\
+										\ast & \ast & \ast &  &  & \ast \\
+										\ast &   &  & \ast &  & \\
+										& \ast &  &  & \ast &  \\
+										&  & \ast &  &  & \ast \\
+										\end{pmatrix},
+										\begin{pmatrix}
+										\ast & \ast & \ast &  & \ast & \ast \\
+										\ast & \ast & \ast & \ast &  &  \ast\\
+										\ast & \ast & \ast & \ast & \ast &  \\
+										& \ast  & \ast & \ast &  & \\
+										\ast&  & \ast &  & \ast &  \\
+										\ast & \ast &  &  &  & \ast \\
+										\end{pmatrix}
+										\]
+									</td>
+								</tr>
+							</table>
+						</div>
+
+						<div class="r-stack" style="margin-bottom:5px; text-align:left;">
+							<div class="fragment fade-in-then-out">
+								<div class="typesetting">
+									$M_{Net,\lambda}$ is complexity $1$, but not in general position.
+								</div>
+							</div>
+							<div class="fragment fade-in-then-out">
+								<div class="typesetting">
+									$M_{Sun,\lambda}$ is complexity $4$.
+								</div>
+							</div>
+							<div class="fragment">
+								<div class="typesetting">
+									Let's think further about toric topology.
+								</div>
+							</div>
+						</div>
+
+						<div class="fragment" style="margin-bottom:15px;">
+							<div class="typesetting">
+								<div class="r-frame">
+									<span class="red">Theorem (A.-Masuda'19):</span> If an action of $T$ on $X$ is
+									equivariantly formal and $j$-independent, then $X/T$ is $(j+2)$-acyclic:
+									\[
+									\tilde{H}_i(X/T)=0 \text{ for } i\leq j+2.
+									\]
+								</div>
+							</div>
+						</div>
+
+						<ul class="fragment" style="margin-bottom:15px;">
+							<li class="typesetting">
+								For a torus action of $T^k$ on $X$ let <span class="blue">$S(X)$ denote the set of its face submanifolds</span>
+								ordered by inclusion. $S(X)$ is a finite graded poset.
+							</li>
+							<li class="typesetting">
+								Its greatest element is $X$ itself, it has rank $k$.
+								The minimal elements are the fixed points, they have ranks $0$.
+							</li>
+							<li class="typesetting">
+								Let <span class="red">$X_r$</span> be the union of all invariant (face) submanifolds of rank $\leq r$.
+							</li>
+							<li class="typesetting">
+								Let <span class="red">$S(X)_r$</span> denote the subposet of all face submanifolds of rank $\leq r$.
+							</li>
+						</ul>
+					</section>
+
+					<section class="white">
+						<div class="r-frame" style="margin-bottom:15px; margin-top:10px;">
+							<h2 class="neon">
+								References:
+							</h2>
+						</div>
+						<ul>
+							<li>
+								<a href="https://arxiv.org/abs/1912.11696" class="blue">[Orbit spaces of formal actions]</a>
+								A.Ayzenberg, M.Masuda, Orbit spaces of equivariantly formal torus actions, 2019,
+								preprint <a href="https://arxiv.org/abs/1912.11696">arXiv:1912.11696</a>.
+							</li>
+						</ul>
+					</section>
+
+				</section>
+
+				<section>
+
+					<section class="white">
+						<div class="r-frame" style="margin-bottom:5px; margin-top:10px;">
+							<table>
+								<tr>
+									<td>
+										<h2 class="white">
+											Cases:
+										</h2>
+									</td>
+									<td>
+										<table>
+											<tr>
+												<td>
+													<img src="pics/robertsNet.png">
+												</td>
+												<td>
+													<img src="pics/robertsSun.png">
+												</td>
+											</tr>
+											<tr>
+												<td>
+													<h2 class="white">
+														$Net$
+													</h2>
+												</td>
+												<td>
+													<h2 class="white">
+														$Sun$
+													</h2>
+												</td>
+											</tr>
+										</table>
+									</td>
+									<td>
+										\[
+										\begin{pmatrix}
+										\ast & \ast & \ast & \ast &  &  \\
+										\ast & \ast & \ast &  & \ast &  \\
+										\ast & \ast & \ast &  &  & \ast \\
+										\ast &   &  & \ast &  & \\
+										& \ast &  &  & \ast &  \\
+										&  & \ast &  &  & \ast \\
+										\end{pmatrix},
+										\begin{pmatrix}
+										\ast & \ast & \ast &  & \ast & \ast \\
+										\ast & \ast & \ast & \ast &  &  \ast\\
+										\ast & \ast & \ast & \ast & \ast &  \\
+										& \ast  & \ast & \ast &  & \\
+										\ast&  & \ast &  & \ast &  \\
+										\ast & \ast &  &  &  & \ast \\
+										\end{pmatrix}
+										\]
+									</td>
+								</tr>
+							</table>
+						</div>
+
+						<div style="text-align:center;">
+							Let's think further about toric topology.
+						</div>
+
+						<div class="fragment" style="margin-bottom:15px;">
+							<div class="typesetting">
+								<div class="r-frame">
+									<span class="red">Theorem (A.-Masuda-Solomadin'22):</span> If an action of $T$ on $X$ is
+									equivariantly formal and $j$-independent, then $S(X)_r$ is
+									$\min(j+1,r-1)$-acyclic:
+									\[
+									\tilde{H}_i(|S(X)_r|)=0 \text{ for } i\leq \min(j+1,r-1).
+									\]
+								</div>
+							</div>
+						</div>
+
+						<ul class="fragment" style="margin-bottom:15px;">
+							<li class="typesetting">
+								<span class="blue">Homotopy colimits and spectral sequences</span> to transfer from $X/T$ to $S(X)$.
+							</li>
+							<li class="typesetting">
+								Essentially, all these results are based on the following
+							</li>
+						</ul>
+
+
+						<div class="r-stack">
+							<div class="fragment fade-in-then-out" style="margin-bottom:15px;">
+								<div class="typesetting">
+									<div class="r-frame">
+										<span class="blue">Theorem (Franz-Puppe'07):</span> An action of $T$ on $X$ is
+										equivariantly formal iff and only if the following sequence <span class="neon">(ABFP-sequence)</span> is exact:
+										\[
+										0\to H^*_T(X)\stackrel{i^*}{\to} H^*_T(X_0)\stackrel{\delta_0}{\to}
+										H^{*+1}_T(X_1,X_0)\stackrel{\delta_1}{\to}\cdots \stackrel{\delta_{k-1}}{\to}H^{*+k}_T(X,X_{k-1})\to 0.
+										\]
+									</div>
+								</div>
+							</div>
+							<div class="fragment" style="margin-bottom:15px;">
+								<div class="typesetting">
+									Equivalently:
+									<div class="r-frame" style="margin-top:20px;">
+										<span class="blue">Theorem (Franz-Puppe'07):</span> An action of $T$ on $X$ is
+										equivariantly formal iff and only if a certain sheaf on $S(X)$
+										<span class="neon">(the GKM sheaf)</span> is acyclic.
+									</div>
+								</div>
+							</div>
+						</div>
+
+					</section>
+
+					<section class="white">
+						<div class="r-frame" style="margin-bottom:15px; margin-top:10px;">
+							<h2 class="neon">
+								References:
+							</h2>
+						</div>
+						<ul>
+							<li>
+								<a href="https://arxiv.org/abs/2203.10641" class="blue">[Face posets of formal actions]</a>
+								A.Ayzenberg, M.Masuda, G.Solomadin, How is a graph not like a manifold?, 2022, preprint
+								<a href="https://arxiv.org/abs/2203.10641">arXiv:2203.10641</a>.
+							</li>
+							<li>
+								<a href="https://arxiv.org/abs/math/0505607v2" class="blue">[ABFP-sequence]</a>
+								M.Franz, V.Puppe, Exact cohomology sequences with integral coefficients for torus actions,
+								Transformation Groups 12 (2007), 65-76.
+							</li>
+						</ul>
+						<div style="margin-bottom:10px; margin-top:10px;">
+							I don't know any paper, where GKM-sheaf is defined and studied on the whole poset $S(X)$.
+							People usually work with GKM-graphs (or hypergraphs), which are just 1-skeleta $S(X)_1$. In
+							this case GKM-sheaves can be found in
+						</div>
+						<ul>
+							<li>
+								<a href="https://arxiv.org/abs/1008.1517" class="blue">[GKM-sheaves]</a>
+								T.Baird, GKM-sheaves and nonorientable surface group representations,
+								J. Symplectic Geom. 12:4 (2014).
+							</li>
+							<li>
+								<a href="https://arxiv.org/abs/1806.01761" class="blue">[GKM-sheaves]</a>
+								I.Al-Jabea, T.Baird, Cohomology of GKM-sheaves, 2018, preprint
+								<a href="https://arxiv.org/abs/1806.01761">arXiv:1806.01761</a>.
+
+							</li>
+						</ul>
+					</section>
+				</section>
+
+				<section>
+
+					<section class="blue">
+						<div class="r-frame" style="margin-bottom:5px; margin-top:10px;">
+							<h2 class="white">
+								General philosophy:
+							</h2>
+						</div>
+
+						<div class="fragment" style="margin-bottom:20px;">
+							<div class="typesetting">
+								If we have <span class="red">a general space $X$:</span>
+							</div>
+						</div>
+
+						<ul class="fragment" style="margin-bottom:20px;">
+							<li class="typesetting">
+								When we study a general space, it is instructive to subdivide it into cells,
+								and compute invariants of cell subdivision, such as <span class="white">cellular homology</span>.
+							</li>
+							<li class="typesetting">
+								But there is a problem, when we are not given a cell subdivision.
+							</li>
+							<li class="typesetting">
+								The problem of finding cell subdivision for a semi-algebraic set
+								is <span class="white">algorithmically solvable</span> (Whitney'57, Hironaka'75).
+							</li>
+							<li class="typesetting">
+								Hence computing homology of semi-algebraic set is
+								<span class="white">algorithmically solvable</span>
+								(Petrovskii-Oleinik-Milnor-Thom).
+							</li>
+							<li class="typesetting">
+								But it takes <span class="white">time comparable to Tarski algorithm</span>,
+								something like double exponent of the input.
+							</li>
+							<li class="typesetting">
+								No way to compute $H_{odd}(M_{\Gamma,\lambda})$ in practice.
+							</li>
+						</ul>
+
+						<div class="fragment" style="margin-bottom:20px;">
+							<div class="typesetting">
+								But if we have <span class="red">a torus action on $X$:</span>
+							</div>
+						</div>
+
+						<ul class="fragment">
+							<li class="typesetting">
+								We can consider <span class="white">the poset $S(X)$</span>. It is usually easier to describe, than a cell subdivision.
+							</li>
+							<li class="typesetting">
+								We can take some <span class="white">sheaves</span> on $S(X)$, such as
+								<span class="neon">GKM-sheaf</span>,
+								or <span class="neon">a constant sheaf</span>,
+								or <span class="neon">$F\mapsto H^*(F,F_{-1})$</span>, or
+								<span class="neon">$F\mapsto H_*(T/T_F)$</span>.
+							</li>
+							<li class="typesetting">
+								We can use $S(X)$ to study homological structure of $X$ itself.
+							</li>
+						</ul>
+
+					</section>
+
+					<section class="blue">
+						<div class="r-frame" style="margin-bottom:15px; margin-top:10px;">
+							<h2 class="white">
+								References:
+							</h2>
+						</div>
+						<ul>
+							<li>
+								<a href="https://www.jstor.org/stable/1969908" class="red">[Subdivide]</a>
+								H.Whitney, Elementary structure of real algebraic varieties,
+								Ann. of Math. 2:66 (1957).
+							</li>
+							<li>
+								<span class="red">[Subdivide more]</span>
+								H.Hironaka, Triangulations of algebraic sets, Proc. Sympos. Pure Math.29 (1975).
+							</li>
+							<li>
+								<span class="red">[Euler characteristic of algebraic variety]</span>
+								I.G.Petrovskii, O.A.Oleinik, On the topology of real algebraic surfaces, Izvestiya
+								Akad. Nauk SSSR. Ser. Mat. 13 (1949).
+							</li>
+							<li>
+								<span class="red">[Betti numbers of algebraic variety]</span>
+								J.Milnor, On the Betti numbers of real varieties, Proc. Amer. Math. Soc. 15 (1964).
+							</li>
+							<li>
+								<span class="red">[Betti numbers of algebraic variety]</span>
+								R. Thom, Sur l'homologie des variétés algébriques réelles, Differential and
+								Combinatorial Topology (A Symposium in Honor of Marston Morse), Princeton Univ. Press,
+								Princeton, N.J. (1965).
+							</li>
+							<li>
+								<span class="red">[Algebraic variety is nonempty?]</span>
+								A.Tarski, A decision method for elementary algebra and geometry,
+								University of California Press, Berkeley and Los Angeles, Calif., 1951.
+							</li>
+						</ul>
+					</section>
+
+					<!--<section class="blue">
+			<div class="r-frame" style="margin-bottom:15px; margin-top:10px;">
+				<h2 class="white">
+					Suggestions:
+				</h2>
+			</div>
+		</section>-->
+				</section>
+
+				<section>
+
+					<section class="white">
+						<div class="r-frame" style="margin-bottom:10px; margin-top:10px;">
+							<h2 class="white">
+								So what about $S(M_{\Gamma,\lambda})$?
+							</h2>
+						</div>
+
+						<ul class="fragment" style="margin-bottom:15px;">
+							<li class="typesetting">
+								Notice that every graph has girth at least $3$.
+							</li>
+							<li class="typesetting">
+								Therefore the action on $M_{\Gamma,\lambda}$ is always
+								<span class="blue">$2$-independent</span>.
+							</li>
+							<li class="typesetting">
+								Every two weights <span class="blue">are non-collinear</span>.
+								Same as in <span class="neon">GKM-theory</span>.
+							</li>
+							<li class="typesetting">
+								If $M_{\Gamma,\lambda}$ is equivariantly formal,
+								then $S(M_{\Gamma,\lambda})_r$ is <span class="blue">$\min(3,r-1)$-acyclic</span>.
+							</li>
+						</ul>
+
+						<div class="fragment" style="margin-bottom:15px;">
+
+							<div class="r-frame">
+								<div class="typesetting" style="text-align:center;">
+									<h3 class="red">I got a plan:</h3>
+								</div>
+								<ol>
+									<li class="typesetting">
+										Describe $S(M_{\Gamma,\lambda})$;
+									</li>
+									<li class="typesetting">
+										Put $S(M_{\Gamma,\lambda})_r$ into computer and compute lower-degree homology;
+									</li>
+									<li class="typesetting">
+										Find that small homology are nontrivial for $Net$ and $Sun$ graphs;
+									</li>
+									<li class="typesetting">
+										Contradiction $\Rightarrow$ profit.
+									</li>
+								</ol>
+							</div>
+						</div>
+
+						<div class="fragment">
+							<div class="typesetting" style="text-align:center;">
+								<h3 class="blue">Follow the plan with me!</h3>
+							</div>
+							<ul>
+								<li class="typesetting">
+									What do we know about $S(X)$ in general?
+								</li>
+								<li class="typesetting">
+									Let $x\in X^T$. Consider the subposet $S(X)_{\geq x}$ of all faces containing $x$.
+								</li>
+							</ul>
+						</div>
+
+						<div class="fragment" style="margin-bottom:30px;">
+							<ul>
+								<li class="typesetting">
+									If complexity is $0$, then $S(X)_{\geq x}$ is <span class="blue">a boolean lattice</span>.
+									It is the lattice of faces of a simplex.
+								</li>
+								<li class="typesetting">
+									This is the main reason why we have <span class="rainbow">simplicial</span> complexes,
+									<span class="rainbow">simplicial</span> posets,
+									<span class="rainbow">Stanley-Reisner algebras</span> and stuff like that in toric topology.
+								</li>
+								<li class="typesetting">
+									<span class="red">But what happens in higher complexity actions?</span>
+								</li>
+							</ul>
+						</div>
+					</section>
+
+					<section class="white">
+						<div class="r-frame" style="margin-bottom:15px; margin-top:10px;">
+							<h2 class="white">
+								The plan is realized in the sequence:
+							</h2>
+						</div>
+						<ul style="margin-bottom:15px;">
+							<li>
+								<span class="blue">[Matroids]</span>
+								A.Ayzenberg, V.Cherepanov, Matroids in toric topology, 2022, preprint
+								<a href="https://arxiv.org/abs/2203.06282">	arXiv:2203.06282</a>.
+							</li>
+							<li>
+								<span class="blue">[Homotopy colimits]</span>
+								A.Ayzenberg, M.Masuda, G.Solomadin, How is a graph not like a manifold?, 2022, preprint
+								<a href="https://arxiv.org/abs/2203.10641">arXiv:2203.10641</a>.
+							</li>
+							<li>
+								<span class="blue">[Face posets of isospectral matrix spaces]</span>
+								A.Ayzenberg, V.Buchstaber, Cluster-permutohedra and submanifolds
+								of flag varieties with torus actions, 2022, preprint
+								<a href="https://arxiv.org/abs/2203.14133">arXiv:2203.14133</a>.
+							</li>
+							<li>
+								<span class="blue">[Final computations]</span>
+								A.Ayzenberg, K.Sorokin, Topological approach to diagonalization algorithms, 2022, preprint
+								<a href="https://arxiv.org/abs/2204.06111">arXiv:2204.06111</a>.
+							</li>
+						</ul>
+						<div style="margin-bottom:15px; ">
+							Local combinatorics of complexity one actions was described previously in
+						</div>
+						<ul style="margin-bottom:15px;">
+							<li>
+								<a href="https://arxiv.org/abs/1802.08828" class="blue">[General position]</a>
+								A.Ayzenberg, Torus actions of complexity one and their local properties,
+								Proc. Steklov Inst. Math. 302 (2018).
+							</li>
+							<li>
+								<a href="https://arxiv.org/abs/1905.02294" class="blue">[Nongeneral position]</a>
+								V.Cherepanov, Orbit spaces for torus actions on Hessenberg varieties,
+								Sbornik: Mathematics 212:12 (2021).
+							</li>
+						</ul>
+
+					</section>
+
+					<section class="white">
+						<div class="r-frame" style="margin-bottom:15px; margin-top:10px;">
+							<h2 class="white">
+								Suggestions:
+							</h2>
+						</div>
+						<div style="margin-bottom:15px;">
+							In general position I used the term <span class="neon">"sponge"</span>
+							for the local combinatorics of the action. The sponge looked similar to
+							some pictures of tropical varieties, and computations with cohomology
+							of complexity one actions seemed similar to some tropical cohomology.
+						</div>
+						<div style="text-align: center; margin-bottom: 15px;">
+							<img src="pics/sponge.png">
+						</div>
+						<div style="margin-bottom:15px;">
+							But I didn't move much further in this direction.
+						</div>
+
+					</section>
+				</section>
+
+				<section>
+
+					<section class="white">
+						<div class="red">
+							<div class="r-frame" style="margin-bottom:10px; margin-top:10px;">
+								<h2 class="red">
+									Matroids:
+								</h2>
+							</div>
+						</div>
+
+						<ul class="fragment" style="margin-bottom:15px;">
+							<li class="typesetting">
+								"Matroid" is a fancy word for <span class="blue">finite geometry</span>.
+							</li>
+							<li class="typesetting">
+								Matroids are used in <span class="neon">greedy algorithms</span>, such as Boruvka's minimal tree algorithm.
+							</li>
+							<li class="typesetting">
+								A general definition can be found
+								<a class="red" href="https://en.wikipedia.org/wiki/Matroid">elsewhere</a>.
+							</li>
+						</ul>
+
+						<div class="fragment" style="margin-bottom:30px;">
+							<div class="typesetting" style="text-align:center;">
+								<h3 class="red">Necessary definitions</h3>
+							</div>
+
+							<ul>
+								<li class="typesetting">
+									<span class="blue">Linear matroid</span> is a collection of vectors in a vector space
+									\[
+									\beta=\{\beta_1,\ldots,\beta_m\}\subset V.
+									\]
+								</li>
+								<li class="typesetting">
+									A <span class="blue">flat</span> of a linear matroid is the intersection of $\beta$ with some subspace.
+								</li>
+								<li class="typesetting">
+									Flats are ordered by inclusion.
+								</li>
+								<li class="typesetting">
+									Flats are graded by ranks. The graded poset of flats is called the
+									<span class="blue">geometric lattice</span>.
+								</li>
+								<li class="typesetting">
+									This is a far reaching generalization of the boolean lattice.
+								</li>
+							</ul>
+						</div>
+
+						<div class="fragment" style="margin-bottom:30px;">
+							<div class="typesetting">
+								<div class="r-frame">
+									<span class="red">Theorem (A.-Cherepanov'22):</span> For any $T$ action on $X$ and
+									for any fixed point $x\in X^T$, the subposet $S(X)_{\geq x}$
+									is isomorphic to the geometric lattice of the matroid of tangent
+									weights at $x$.
+								</div>
+							</div>
+						</div>
+					</section>
+
+					<section class="white">
+						<div class="r-frame" style="margin-bottom:15px; margin-top:10px;">
+							<h2 class="red">
+								References:
+							</h2>
+						</div>
+						If you are into combinatorial topology and want to dive into matroids, this is your choice:
+						<ul style="margin-bottom:10px; margin-top:10px;">
+							<li>
+								<span class="red">[Topology of matroids]</span>
+								A.Björner, Homology and Shellability of Matroids and Geometric Lattices,
+								In N. White (Ed.), Matroid Applications (1992).
+							</li>
+						</ul>
+						We investigated matroids in
+						<ul style="margin-bottom:10px; margin-top:10px;">
+							<li>
+								<span class="red">[Matroids in toric topology]</span>
+								A.Ayzenberg, V.Cherepanov, Matroids in toric topology, 2022, preprint
+								<a href="https://arxiv.org/abs/2203.06282">	arXiv:2203.06282</a>.
+							</li>
+						</ul>
+						Of course, the classical applications of matroids in toric geometry of Grassmann
+						manifolds should be mentioned, although they are not related directly to what we did:
+						<ul style="margin-bottom:10px; margin-top:10px;">
+							<li>
+								<span class="red">[Matroids in Grassmannians]</span>
+								I.M.Gelfand, V.V.Serganova, Combinatorial geometries and torus strata
+								on homogeneous compact manifolds, Russian Math. Surveys, 42:2 (1987).
+							</li>
+							<li>
+								<span class="red">[Matroids in Grassmannians]</span>
+								I.M.Gelfand, R.M.Goresky, R.D.MacPherson, V.V.Serganova,
+								Combinatorial geometries, convex polyhedra, and schubert cells,
+								Adv. Math. 63:3 (1987).
+							</li>
+						</ul>
+					</section>
+
+					<section class="white">
+						<div class="r-frame" style="margin-bottom:15px; margin-top:10px;">
+							<h2 class="red">
+								Suggestions:
+							</h2>
+						</div>
+
+						<div>
+							Generally, the weights of an action are determined up to sign, because
+							we are dealing with real tangent representations. So we get an ordinary matroid.<br /><br />
+
+							If there is a (stably) almost complex structure on $X$, the weights are
+							determined without sign ambiguity. Since weights is a set of vectors in $\mathbb{Q}^k$
+							and $\mathbb{Q}$ is an ordered field, we get <span class="rainbow">oriented matroid</span>.
+							<br /><br />
+
+							It's a perspective idea to apply <span class="red">theory of oriented matroids</span> to study
+							torus actions and torus representations. AFAIK, something like this was done
+							only in
+						</div>
+						<ul style="margin-bottom:15px; margin-top:15px;">
+							<li>
+								<a href="https://www.xmath.ous.ac.jp/~kuroki/Toric_Fields_Inst_2020_May15.pdf" class="red">[Gale, GKM]</a>
+								S.Kuroki (joint with T.Matsumura, R.Yukitou), Gale dual of GKM graph, talk at
+								Workshop on Torus Actions in Topology, 2022, Fields Institute.
+							</li>
+						</ul>
+					</section>
+				</section>
+
+				<section>
+
+					<section>
+						<div class="r-frame" style="margin-bottom:10px; margin-top:10px;">
+							<h2>
+								So what about $S(M_{\Gamma,\lambda})$?
+							</h2>
+						</div>
+
+						<div class="fragment">
+							<div class="typesetting" style="margin-bottom:20px;">
+								<p>
+									Let $\Gamma$ be a graph on $n$ vertices. A <span class="red">graphical matroid</span>
+									is a matroid corresponding to the collection
+									\[
+									\{e_i-e_j\mid \text{ where } \{i,j\}\in E_\Gamma\}.
+									\]
+									Here $e_1,\ldots,e_n$ is a basis of $\Bbbk^n$.
+								</p>
+								<p class="white">
+									The flat of this matroid corresponds to the subdivision of $[n]$ into
+									subsets $V_1,\ldots,V_r$, for which the induced graphs $\Gamma|_{V_i}$ are connected.
+									We call such subdivisions <span class="red">clusterings</span>.
+								</p>
+								<p>
+									Let $\mathcal{L}(\Gamma)$ denote the geometric lattice of the graphical matroid.
+								</p>
+
+							</div>
+						</div>
+
+						<div class="fragment">
+							<div class="typesetting" style="margin-bottom:20px;">
+								<div class="r-frame">
+									<span class="white">Proposition:</span> For any fixed point $x$,
+									the poset $S(M_{\Gamma,\lambda})_{\geq x}$ is isomorphic to $\mathcal{L}(\Gamma)$.
+								</div>
+							</div>
+						</div>
+
+						<div class="fragment" style="margin-bottom:15px;">
+							<ul>
+								<li class="typesetting">
+									So far, $S(M_{\Gamma,\lambda})$ has $n!$ points,
+								</li>
+								<li class="typesetting">
+									and for any of them the upper poset $S(M_{\Gamma,\lambda})_{\geq x}$ is a
+									copy of $\mathcal{L}(\Gamma)$.
+								</li>
+							</ul>
+						</div>
+
+						<div class="fragment">
+							<div class="typesetting" style="margin-bottom:20px;">
+								<div class="r-frame" style="margin-bottom:15px;">
+									<span class="blue">Theorem (A.-Buchstaber'22):</span> We have an isomorphism
+									\[
+									S(M_{\Gamma,\lambda})\cong (\mathcal{L}(\Gamma)\times \Sigma_n)/\!\sim.
+									\]
+									The latter poset is called <span class="red">the cluster-permutohedron</span> of a graph $\Gamma$.
+								</div>
+							</div>
+						</div>
+					</section>
+
+					<section>
+						<div class="r-frame" style="margin-bottom:15px; margin-top:10px;">
+							<h2 class="neon">
+								References:
+							</h2>
+						</div>
+						<ul>
+							<li>
+								<span class="white">[Cluster-permutohedra]</span> A.Ayzenberg, V.Buchstaber,
+								Cluster-permutohedra and submanifolds of flag varieties with torus actions, 2022,
+								preprint <a href="https://arxiv.org/abs/2203.14133">arXiv:2203.14133</a>.
+							</li>
+						</ul>
+					</section>
+
+				</section>
+
+				<section>
+					<div class="r-frame" style="margin-bottom:10px; margin-top:10px;">
+						<h2>
+							So what about $S(M_{\Gamma,\lambda})$?
+						</h2>
+					</div>
+
+					<div class="fragment">
+						<div class="typesetting" style="margin-bottom:20px; text-align:center;">
+							<h3 class="white">
+								Cluster-permutohedron can be interpreted as the state space
+								of a <span class="blue">"15"-game</span> on a graph $\Gamma$:
+							</h3>
+							<img src="pics/hextorusZoom.png">
+						</div>
+					</div>
+				</section>
+
+				<section>
+					<div class="r-frame" style="margin-bottom:10px; margin-top:10px;">
+						<h2>
+							The whole space of states for $St_3$:
+						</h2>
+					</div>
+
+					<table class="fragment">
+						<tr>
+							<td>
+								<img src="pics/hextorus.png">
+							</td>
+							<td>
+								<img src="pics/animatedTorus.gif" width="150">
+							</td>
+						</tr>
+					</table>
+				</section>
+
+				<section>
+					<section>
+						<div class="r-frame" style="margin-bottom:10px; margin-top:10px;">
+							<h2 class="neon">
+								Another example, permutohedron:
+							</h2>
+						</div>
+
+						<table class="fragment">
+							<tr>
+								<td>
+									<img src="pics/permutohedron.png" width="500">
+								</td>
+								<td class="typesetting" style="text-align:left;" width="250">
+									<div>
+										This corresponds to the "15" game on
+									</div>
+									<div>
+										<img src="pics/pathGreen.png">
+									</div>
+									<div>
+										The edge graph is the Cayley graph of
+										$\Sigma_4$ with the standard generators
+										\[
+										(1,2), (2,3), (3,4)
+										\]
+									</div>
+
+								</td>
+							</tr>
+						</table>
+
+					</section>
+
+					<section class="white">
+						<div class="r-frame" style="margin-bottom:15px; margin-top:10px;">
+							<h2 class="neon">
+								Suggestions:
+							</h2>
+						</div>
+						<ul>
+							<li style="margin-bottom:15px;">
+								I think its a good idea to
+								<a class="neon" href="https://en.wikipedia.org/wiki/Icosian_game">patent a game</a>
+								with the mechanics of exchanging chips on a graph and some set of universal rules.
+							</li>
+							<li style="margin-bottom:15px;">
+								We can even allow some capacities of vertices, so that several chips can stand
+								on a single vertex of a graph.
+							</li>
+							<li style="margin-bottom:15px;">
+								Such multi-capacity game describes the combinatorics of some
+								<span class="red">partial flag varieties</span>, including Grassmannians, and certain analogues
+								of Hessenberg subvarieties. The case of isospectral Hermitian matrices described above
+								corresponds to games on full flag variety.
+							</li>
+							<li style="margin-bottom:15px;">
+								While full-flags case above is related to Cayley graphs of the symmetric group,
+								the partial-flag cases correspond to
+								<a class="neon" href="https://en.wikipedia.org/wiki/Schreier_coset_graph">Schreier graphs</a>.
+							</li>
+							<li style="margin-bottom:15px;">
+								Many known games somehow utilize mechanics of this universal setting: from "15"-game
+								to Civilization. It is tempting to implement "higher-dimensional moves" allowing interactions
+								of more than one objects at a time. In this case, not only reachability
+								of states, but also the higher-rank homology would somehow affect the game!
+							</li>
+							<li style="margin-bottom:15px;">
+								I presume that
+								<a class="neon" href="https://en.wikipedia.org/wiki/The_Prisoner_of_Benda#The_theorem">Futurama Theorem</a>
+								also has an interpretation in terms of connectivity of a certain color-picked
+								subset of a particular cluster-permutohedron.
+							</li>
+						</ul>
+					</section>
+
+					<section class="white">
+						<div class="r-frame" style="margin-bottom:100px; margin-top:10px;">
+							<h2 class="neon">
+								Use the permutohedra, Luke!
+							</h2>
+						</div>
+						<div style="text-align:center">
+							<img src="pics/SWhexa.png" width="1000">
+						</div>
+					</section>
+				</section>
+
+				<section>
+
+					<section>
+						<div class="r-frame" style="margin-bottom:10px; margin-top:10px;">
+							<h2 class="neon">
+								Graphicahedra:
+							</h2>
+						</div>
+						<ul class="fragment">
+							<li class="typesetting">
+								We found two papers where a similar thing was invented:
+							</li>
+							<li class="typesetting">
+								<span class="blue">
+									G.Araujo-Pardoa, M.Del Rio-Francosa, M.Lopez-Dudeta, D.Oliverosa, E.Schulte,
+									The graphicahedron, European Journal of Combinatorics 31:7 (2010), 1868-1879.
+								</span>
+							</li>
+							<li class="typesetting">
+								<span class="white">
+									M.Del Rio-Francosa, I.Hubard, D.Oliveros, E.Schulte, Symmetric Graphicahedra,
+									Ars Mathematica Contemporanea 5:2 (2012).
+								</span>
+							</li>
+							<li class="typesetting">
+								Graphicahedron of a graph $\Gamma$ is a poset, which is a kind of higher dimensional
+								structure over the Cayley graph of $\Sigma_n$ with generators
+								\[
+								\{(i,j)\mid \{i,j\}\in E_\Gamma\}
+								\]
+							</li>
+						</ul>
+						<ul class="fragment" style="margin-bottom:15px;">
+							<li class="typesetting">
+								The second paper contains results exactly about <span class="red">$St_3$ and $Cy_k$</span>.
+							</li>
+							<li class="typesetting">
+								Actually the case $St_3$ refers to the book of <span class="white">Coxeter and Moser'80</span>, where it
+								is called <span class="blue">toroidal regular map $\{6,3\}_{(2,2)}$</span>.
+							</li>
+						</ul>
+
+						<table class="fragment">
+							<tr class="r-frame">
+								<td style="text-align:left;" width="600">
+									<ul>
+										<li class="typesetting">
+											The case $Cy_k$ is related to
+											<span class="red">tilings of $\mathbb{R}^k$ by permutohedra</span>.
+										</li>
+										<li class="typesetting">
+											More precisely, their quotients to a torus.
+										</li>
+										<li class="typesetting">
+											Such tilings are also related to minimal triangulations and crystallizations.
+											And even <span class="yellow">generalized Tonnetzes</span>.
+										</li>
+									</ul>
+								</td>
+								<td>
+									<img src="pics/model200.jpg" width="200">
+								</td>
+							</tr>
+						</table>
+
+					</section>
+
+					<section>
+						<div class="r-frame" style="margin-bottom:15px; margin-top:10px;">
+							<h2 class="neon">
+								References:
+							</h2>
+						</div>
+						<ul style="margin-bottom:15px;">
+							<li>
+								<span class="white">[Graphicahedra]</span> see references on the slide above.
+							</li>
+							<li>
+								<span class="white">[Book on Groups]</span>
+								H.S.M.Coxeter, W.O.J.Moser, Generators and Relations for Discrete Groups,
+								Fourth Edition, Springer, New York, 1980.
+							</li>
+							<li>
+								<a href="https://arxiv.org/abs/1803.10449" class="white">[$St_3$-graphicahedron and nano-tubes]</a>,
+								A.A.Ayzenberg, V.M.Buchstaber,
+								Manifolds of isospectral arrow matrices, Sbornik: Mathematics 212:5 (2021).
+							</li>
+							<li>
+								<a href="https://arxiv.org/abs/1803.11433" class="white">[$Cy_k$-graphicahedron and permutohedral tilings]</a>
+								A.Ayzenberg, Space of isospectral periodic tridiagonal matrices,
+								Algebraic and Geometric Topology 20 (2020).
+							</li>
+						</ul>
+						<div style="margin-bottom:15px;">
+							Construction of cluster-permutohedron/graphicahedron for a
+							particular case of cycle graphs	was independently introduced under the name
+							<span class="red">Cyclopermutohedron</span> in the works of Panina
+							in relation to <span class="white">polygonal linkages</span>.
+							The second work is the fascinating application of
+							<span class="white">discrete Morse theory</span>
+							to prove that cyclopermutohedron has homology of a torus.
+						</div>
+						<ul>
+							<li>
+								<a href="https://arxiv.org/abs/1401.7476" class="white">[Cyclopermutohedron linkages]</a>
+								G.Panina, Cyclopermutohedron, Proceedings of the Steklov Institute of Mathematics
+								288 (2015).
+							</li>
+							<li>
+								<a href="https://arxiv.org/abs/1602.00471" class="white">[Cyclopermutohedron topology]</a>
+								I.Nekrasov, G.Panina, A.Zhukova, Cyclopermutohedron: geometry and topology,
+								European Journal of Mathematics 2 (2016).
+							</li>
+						</ul>
+					</section>
+
+					<section class="blue">
+						<div class="r-frame" style="margin-bottom:15px; margin-top:10px;">
+							<h2 class="neon">
+								More references, more fun:
+							</h2>
+						</div>
+						<div class="white" style="margin-bottom:15px;">
+							The graphicahedron of a cycle graph $Cy_n$ is a cell subdivision of a torus $T^{n-1}$.
+							Its Poincaré dual subdivision is a simplicial cell subdivision of $T^{n-1}$ having exactly
+							$n$ vertices. That is the minimal possible number of vertices of a simplicial cell subdivision.
+							Such vertex-minimal simplicial cell structures are studied under the name crystallizations.
+						</div>
+						<ul style="margin-bottom:15px;">
+							<li>
+								<span class="neon">[Crystallizations]</span>
+								M.Ferri, C.Gagliardi, L.Grasselli, A graph-theoretical representation of PL-manifolds -
+								A survey on crystallizations, Aequationes Mathematicae 31 (1986).
+							</li>
+						</ul>
+						<div class="white" style="margin-bottom:15px;">
+							The result of this paper states that every PL-manifold of dimension $n-1$ has
+							a simplicial cell subdivision with only $n$ vertices. So graphicahedron / cyclopermutohedron
+							provides a concrete construction for a torus.
+						</div>
+
+						<div style="margin-bottom:15px;">
+							Crystallizations were designed for algorithmical study of PL manifolds.
+						</div>
+
+					</section>
+
+					<section class="white">
+						<div class="r-frame" style="margin-bottom:15px; margin-top:10px;">
+							<h2 class="neon">
+								Even more references, with music:
+							</h2>
+						</div>
+						<div style="margin-bottom:15px;">
+							On the other hand, the minimal number of vertices of an actual triangulation of
+							a torus $T^{n-1}$ is unknown.
+						</div>
+						<div class="r-frame" style="margin-bottom:15px;">
+							<div class="blue">
+								<span class="red">Kühnel-Lassmann Conjecture:</span> any actual triangulation of $T^{n-1}$ has at least
+								$2^n-1$ many vertices.
+							</div>
+						</div>
+						<div style="margin-bottom:15px;">
+							This is true for $n=3$ by
+							<a class="neon" href="https://projecteuclid.org/journals/acta-mathematica/volume-145/issue-none/Minimal-triangulations-on-orientable-surfaces/10.1007/BF02414187.full">
+								Jungerman-Ringel</a>, and AFAIK checked on computer for $n=4,5$. The known triangulations
+							with $2^n-1$ vertices were constructed in
+						</div>
+						<ul style="margin-bottom:15px;">
+							<li class="blue">
+								<span class="neon">[Cyclic construction]</span>
+								W.Kühnel, G.Lassmann, Combinatorial d-tori with a large symmetry group,
+								Discrete Comput. Geom., 3:2 (1988).
+							</li>
+						</ul>
+						<div style="margin-bottom:15px;">
+							using (surprize!) permutohedral tilings of the space. Similar to graphicahedron. The
+							cyclic construction of Kühnel-Lassmann was reinvented in the paper
+						</div>
+						<ul style="margin-bottom:15px;">
+							<li class="blue">
+								<a href="https://arxiv.org/abs/2002.09184" class="neon">[Generalized Tonnetz]</a>
+								F.D.Jevtić, R.T.Živaljević, Generalized Tonnetz and discrete Abel-Jacobi map,
+								Topol. Methods Nonlinear Anal. 57:2 (2021).
+							</li>
+						</ul>
+						<div style="margin-bottom:15px;">
+							as a generalization of <a class="red" href="https://en.wikipedia.org/wiki/Tonnetz">classical Euler's Tonnetz</a>,
+							the notion describing harmonical relations in <span class="neon">Music Theory</span>.
+							They use discrete Abel-Jacobi maps to prove that the thing is a torus.
+						</div>
+
+					</section>
+
+					<section class="white">
+						<div class="r-frame" style="margin-bottom:15px; margin-top:10px;">
+							<h2 class="neon">
+								Suggestions:
+							</h2>
+						</div>
+						<div style="margin-bottom:15px;">
+							Kühnel-Lassmann construction (one of its interpretations)
+							takes a collection of numbers $(k_1,\ldots,k_n)$ as an
+							input, and outputs a simplicial cell subdivision of torus $T^{n-1}$ with
+							$\sum k_i$ many vertices.
+						</div>
+						<ul style="margin-bottom:15px;">
+							<li>
+								If we take $(1,\ldots,1)$, we get graphicahedron of $Cy_n$ (otherwise known as
+								cyclopermutohedron of Panina).
+							</li>
+							<li>
+								If all partial sums of $k_i$ are pairwise distinct, we get an actual
+								triangulation. A sort of information optimality tells that the minimal such
+								collection is $(1,2,4,\ldots,2^{n-1})$, which gives the conjecturally optimal
+								bound $2^n-1$ for a triangulation of a torus.
+							</li>
+						</ul>
+						<div class="r-frame" style="margin-bottom:15px;">
+							<span class="neon">Suggestion:</span> consider an analogue of cyclic Hessenberg variety in the partial flag variety
+							$Flags(k_1,k_2,\ldots,k_n)$, and relate its combinatorics to the general
+							Kühnel-Lassmann-Jevtić-Živaljević construction.
+						</div>
+
+						<div style="text-align:center">
+							<img src="pics/tiling.png" width="150">
+						</div>
+
+					</section>
+				</section>
+
+				<section class="white">
+
+					<section>
+						<div class="r-frame" style="margin-bottom:10px; margin-top:10px;">
+							<h2 class="white">
+								Finite topology:
+							</h2>
+						</div>
+						<ul class="fragment">
+							<li class="typesetting">
+								We hoped that graphicahedral people said something about $Net$ and $Sun$.
+							</li>
+						</ul>
+						<ul class="fragment" style="margin-bottom:30px;">
+							<li class="typesetting">
+								<span class="blue">
+									Unfortunately, no.
+								</span>
+							</li>
+							<li class="typesetting">
+								But we related cluster-permutohedra to graphicahedra anyway.
+							</li>
+						</ul>
+
+						<div class="fragment" style="margin-bottom:30px;">
+							<div class="typesetting">
+								<div class="r-frame" style="margin-bottom:15px;">
+									<span class="red">Theorem (A.-Buchstaber'22):</span> Cluster-permutohedron
+									<span class="neon">(ours)</span> is
+									the core of a graphicahedron <span class="blue">(theirs)</span> in the sense of finite topology.
+								</div>
+								In particular, these two posets are related via <span class="blue">Galois connection</span>.
+							</div>
+						</div>
+
+						<ul class="fragment">
+							<li class="typesetting">
+								Cores where invented by Stong'66 as a tool to study homotopy theory of finite
+								topological spaces.
+							</li>
+							<li class="typesetting">
+								A finite $T_0$-space is the same as poset.
+							</li>
+
+						</ul>
+						<ul class="fragment" style="margin-bottom:15px;">
+							<li class="typesetting">
+								A <span class="blue">core</span> of a poset is a certain subposet.
+							</li>
+							<li class="typesetting">
+								<span class="red">Stong's theorem:</span> two finite spaces are homotopy equivalent iff they have isomorphic cores.
+							</li>
+						</ul>
+
+						<div class="fragment" style="margin-bottom:30px;">
+							<div class="typesetting">
+								As a consequence, <span class="neon">cluster-permutohedron</span> is homotopically the same
+								as graphicahedron, contains its topological essence, and is non-simplifiable.
+							</div>
+						</div>
+
+					</section>
+
+					<section>
+						<div class="r-frame" style="margin-bottom:15px; margin-top:10px;">
+							<h2 class="neon">
+								References:
+							</h2>
+						</div>
+						<ul style="margin-bottom:15px">
+							<li>
+								<a href="https://www.youtube.com/watch?v=nDbeqj-1XOo" class="red">[Us and Them]</a>
+								A.Ayzenberg, V.Buchstaber,
+								Cluster-permutohedra and submanifolds of flag varieties with torus actions, 2022,
+								preprint <a class="neon" href="https://arxiv.org/abs/2203.14133">arXiv:2203.14133</a>.
+							</li>
+						</ul>
+						<div style="margin-bottom:15px;">
+							and the list of sources on finite topologies:
+						</div>
+						<ul style="margin-bottom:15px">
+							<li>
+								<span class="red">[Finite topology]</span>
+								P.Alexandroff, Diskrete Räume, Mat. Sb. (N.S.) 2 (1937).
+							</li>
+							<li>
+								<span class="red">[Cores]</span>
+								R.E.Stong, Finite topological spaces, Trans. Amer. Math. Soc. 123 (1966).
+							</li>
+							<li>
+								<span class="red">[Reduction to core]</span>
+								T.Osaki, Reduction of finite topological spaces, Interdisciplinary Information Sciences 5:2 (1999).
+							</li>
+							<li>
+								<span class="red">[Simple homotopy equivalence to core]</span>
+								J.A.Barmak, On Quillen's theorem A for posets, Journal of Combinatorial Theory Ser. A, 118:8 (2011).
+							</li>
+							<li>
+								<a href="https://arxiv.org/abs/1809.10945" class="red">[Applications in computations]</a>
+								J.-D.Boissonnat, S.Pritam, D.Pareek, Strong collapse and persistent homology,
+								Journal of Topology and Analysis, 2022.
+							</li>
+						</ul>
+					</section>
+
+					<section>
+						<div class="r-frame" style="margin-bottom:15px; margin-top:10px;">
+							<h2 class="red">
+								Sheaves over finite posets:
+							</h2>
+						</div>
+						<div style="margin-bottom:10px;">
+							There are lots of questions about finite topologies and sheaves over them.
+							The main question, is how to algorithmically compute cohomology of
+							a sheaf of finite-dimensional vector spaces over a finite topology.
+							I wrote a very short introductory text on this
+							<a class="neon" href="https://drive.google.com/file/d/1Eqc2DnFfWPE944g0hNUvDcQgJoGRF4J8/view?usp=sharing">in Russian</a>.
+							It explains a simple set of ideas
+						</div>
+
+						<ol style="margin-bottom:15px">
+							<li>
+								A finite topological space is a <span class="veryRed">preposet</span>.
+								Posets are finite $T_0$ spaces. A preposet can be naturally turned into poset
+								by identifying $x,y$ if $x\leq y$ and $y\leq x$. Sheaf over a preposet
+								induces a sheaf over its <span class="veryRed">posetification</span>.
+							</li>
+							<li>
+								A sheaf over a poset is the same as a
+								<span class="veryRed">diagram over the category of a poset</span> (=
+								<span class="red">local system of coefficients</span> on a poset).
+								Arrows of this category hit from smaller elements to bigger
+								elements.
+							</li>
+							<li>
+								Cohomology of a sheaf is understood as
+								<span class="veryRed">derived functors of the global sections' functor</span>.
+							</li>
+							<li>
+								Global sections' functor takes the <span class="red">colimit</span> of the diagram.
+							</li>
+							<li>
+								If a poset $S$ is simplicial, sheaf-theoretical cohomology of $\mathcal{F}$
+								coincide with cohomology of $S$ in the local coefficient system $\mathcal{F}$.
+							</li>
+							<li>
+								For general sheaf $\mathcal{F}$ take
+								<span class="red">the order complex $ord(S)$</span> of a poset, and
+								<span class="veryRed">the local system $\hat{\mathcal{F}}$</span> on it,
+								which takes value $\mathcal{F}(s_k)$ on any simplex $\{s_0,\ldots,s_k\}\in ord(S)$,
+								i.e. a chain $s_0\lt\cdots\lt s_k$ in $S$.
+							</li>
+							<li>
+								Then <span class="veryRed">
+									sheaf-theoretical cohomology of $\mathcal{F}$
+									coincides with cohomology of $ord(S)$ in the local coefficient system
+									$\hat{\mathcal{F}}$
+								</span>. The latter is <span class="neon">computable</span>.
+							</li>
+						</ol>
+					</section>
+
+					<section>
+						<div class="r-frame" style="margin-bottom:15px; margin-top:10px;">
+							<h2 class="red">
+								Suggestions:
+							</h2>
+						</div>
+						<div style="margin-bottom:15px;">
+							You can read much more details about all this in
+						</div>
+
+						<ul style="margin-bottom:15px">
+							<li>
+								<a class="veryRed">[Finite sheaves]</a>
+								J.M.Curry, Sheaves, Cosheaves and Applications, preprint
+								<a href="https://arxiv.org/abs/1303.3255">arXiv:1303.3255v2</a>
+							</li>
+						</ul>
+
+						<div style="margin-bottom:15px;">
+							Here is a question to think
+						</div>
+
+						<div class="r-frame" style="margin-bottom:30px;">
+							<span class="blue">
+								Problem.
+							</span>
+							<span class="red">
+								Find relation between cohomology of a sheaf on a poset and the cohomology of
+								the induced sheaf on the core of a poset.
+							</span>
+						</div>
+
+						<div style="margin-bottom:30px;">
+							If there is a relation for a class of sheaves, this can be used to simplify
+							computations in practice: not just for ordinary simplicial cohomology
+							(as in Boissonnat et al) but also for sheaf cohomology.
+						</div>
+
+						<div style="margin-bottom:30px;">
+							AFAIK, there is no efficient software to compute cohomology of sheaves
+							over finite posets.
+						</div>
+
+						<div class="yellow" style="margin-bottom:15px;">
+							I would say, this is highly unpleasant.
+						</div>
+
+					</section>
+
+				</section>
+
+				<section>
+
+					<section>
+						<div class="r-frame" style="margin-bottom:10px; margin-top:10px;">
+							<h2 class="yellow">
+								Finally, to computations:
+							</h2>
+						</div>
+						<ul class="fragment" style="margin-bottom:15px;">
+							<li class="typesetting">
+								We invented the way to encode the face poset as a cluster-permutohedron
+								<span class="blue">
+									\[
+									S(M_{\Gamma,\lambda})\cong (\mathcal{L}(\Gamma)\times\Sigma_n)/\!\sim
+									\]
+								</span>
+							</li>
+							<li class="typesetting">
+								Both $\mathcal{L}(\Gamma)$ and $\Sigma_n$ can be constructed in
+								<a href="https://sagecell.sagemath.org/" class="white">Sage</a>.
+							</li>
+							<li class="typesetting">
+								We defined cluster-permutohedron for an arbitrary graph $\Rightarrow$
+								select its skeleton $\Rightarrow$ take its geometrical
+								realization $\Rightarrow$ compute homology.
+							</li>
+						</ul>
+
+						<div class="yellow">
+							<div class="r-stack">
+								<div class="fragment fade-in-then-out" style="margin-bottom:20px; margin-top:20px;">
+									<div class="r-frame">
+										<div class="typesetting" style="text-align:center;">
+											We put $St_3$ and got $H_1(S(M_{St_3,\lambda})_2)\neq 0$ as should be.
+										</div>
+									</div>
+								</div>
+								<div class="fragment fade-in-then-out" style="margin-bottom:20px; margin-top:20px;">
+									<div class="r-frame">
+										<div class="typesetting" style="text-align:center;">
+											We put $Cy_4$ and got $H_1(S(M_{Cy_4,\lambda})_2)\neq 0$. This is also nice.
+										</div>
+									</div>
+								</div>
+								<div class="fragment fade-in-then-out" style="margin-bottom:20px; margin-top:20px;">
+									<div class="r-frame">
+										<div class="typesetting" style="text-align:center;">
+											$Cy_5$ was hard, but we also succeeded.
+										</div>
+									</div>
+								</div>
+								<div class="fragment fade-in-then-out" style="margin-bottom:20px; margin-top:20px;">
+									<div class="r-frame">
+										<div class="typesetting" style="text-align:center;">
+											We tested several staircase examples and checked acyclicity.
+										</div>
+									</div>
+								</div>
+								<div class="fragment" style="margin-bottom:20px; margin-top:20px;">
+									<div class="r-frame">
+										<div class="typesetting" style="text-align:center;">
+											Now the moment of truth: we tried $Net$ and $Sun$...
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="fragment">
+							<div class="typesetting">
+								We got <span class="red">$H_1(S(M_{Net,\lambda})_4)=0$</span> and
+								<span class="red">$H_2(S(M_{Net,\lambda})_4)=0$</span>.<br />
+								We also got <span class="red">$H_1(S(M_{Sun,\lambda})_4)=0$</span>. <br />
+								We were unable to compute homologies of higher degrees.
+							</div>
+						</div>
+
+						<div class="yellow">
+							<div class="r-stack">
+								<div class="fragment fade-in-then-out" style="margin-bottom:20px;">
+									<div class="typesetting">
+										<div class="r-frame" style="text-align:center;">
+											This was discouraging.
+										</div>
+									</div>
+								</div>
+								<div class="fragment fade-in-then-out" style="margin-bottom:20px;">
+									<div class="typesetting">
+										<div class="r-frame" style="text-align:center;">
+											We have access to
+											<a class="veryRed" href="https://hpc.hse.ru/en/hardware/hpc-cluster">cHARISMa</a>
+											supercomputer of HSE. We tried to run
+											naive algorithm there, and failed.
+										</div>
+									</div>
+								</div>
+								<div class="fragment fade-in-then-out" style="margin-bottom:20px;">
+									<div class="typesetting">
+										<div class="r-frame" style="text-align:center;">
+											At this point I realized it's a shame, there is no available
+											algorithm to parallelize homology on a supercomputer.
+										</div>
+									</div>
+								</div>
+								<div class="fragment fade-in-then-out" style="margin-bottom:20px;">
+									<div class="typesetting">
+										<div class="r-frame" style="text-align:center;">
+											I asked at <a href="https://scg.hse.ru/en/" class="white">IL of Statistical and Computational Genomics of HSE</a> about
+											parallelizing Gauss. Their answer is summarized at the first slide.
+										</div>
+									</div>
+								</div>
+								<div class="fragment" style="margin-bottom:20px;">
+									<div class="typesetting">
+										<div class="r-frame" style="text-align:center;">
+											But then we guessed to use Lab's station and simply took
+											coefficients in $\mathbb{Z}_2$. After a day and a night we finally got:
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="white">
+							<div class="fragment" style="margin-bottom:20px;">
+								<div class="typesetting">
+									<div class="r-frame">
+										<span class="blue">Theorem (A.-Sorokin'22):</span> $S(M_{Net,\lambda})_4$ and
+										$S(M_{Sun,\lambda})_4$ are 2-acyclic. But <span class="red">$\beta_3(S(M_{Net,\lambda})_4)=5$</span>
+										and <span class="red">$\beta_3(S(M_{Sun,\lambda})_4)=5$</span>.
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="r-stack">
+							<div class="fragment fade-in-then-out">
+								<div class="typesetting">
+									<span class="neon">
+										This contradicts to $3$-acyclicity
+										expected for equivariantly formal actions...
+									</span>
+								</div>
+							</div>
+							<div class="fragment fade-in-then-out">
+								<div class="typesetting">
+									<span class="neon">
+										...and proves the whole theorem.
+									</span>
+								</div>
+							</div>
+							<div class="fragment fade-in-then-out">
+								<div class="typesetting">
+									<span class="blue">
+										We also realized another approach based on GKM-theory to confirm the result.
+									</span>
+								</div>
+							</div>
+							<div class="fragment fade-in-then-out">
+								<div class="typesetting">
+									<span class="white">
+										We also checked everything for real matrices and discrete torus action.
+									</span>
+								</div>
+							</div>
+							<div class="fragment fade">
+								<div class="typesetting">
+									<span class="white">
+										This required some recent results of Franz, Puppe, Chaves, and Yu Li about
+										discrete torus actions.
+									</span>
+								</div>
+							</div>
+						</div>
+					</section>
+
+					<section class="white">
+						<div class="r-frame" style="margin-bottom:15px; margin-top:10px;">
+							<h2>
+								References:
+							</h2>
+						</div>
+						<ul class="yellow" style="margin-bottom:15px;">
+							<li>
+								<a href="https://github.com/AntonAyzenberg/GKM-homology" class="blue">[Our code]</a>
+								The Sage-code of our project on Github.
+								The file
+								<a href="https://github.com/AntonAyzenberg/GKM-homology/blob/main/Homology_Of_Cluster-Permutohedra.ipynb" class="neon">Homology_of_Cluster_Permutohedra</a>
+								contains computations of homology with integral coefficients. Other files are
+								needed for other approaches described in
+
+							</li>
+							<li>
+								<a href="https://arxiv.org/abs/2204.06111" class="blue">[Our paper]</a>
+								A.Ayzenberg, K.Sorokin, Topological approach to diagonalization algorithms, 2022,
+								preprint <a class="neon" href="https://arxiv.org/abs/2204.06111">arXiv:2204.06111</a>.
+							</li>
+						</ul>
+						<div style="margin-bottom:15px;">
+							The following papers were used to justify that everything works for discrete torus actions on
+							manifolds of real symmetric matrices with mod 2 coefficients.
+						</div>
+						<ul>
+							<li>
+								<a href="https://arxiv.org/abs/2007.00496" class="red">[ABFP-sequence for discrete torus]</a>
+								C.Allday, M.Franz, V.Puppe, Syzygies in equivariant cohomology in positive characteristic,
+								Forum Math. 33 (2021).
+							</li>
+							<li>
+								<span class="red">[ABFP-sequence, discrete case]</span>
+								V.Puppe, Equivariant cohomology of $\mathbb{Z}_2^r$-manifolds and syzygies,
+								Fundamenta Mathematicae (2018).
+							</li>
+							<li>
+								<a href="https://arxiv.org/abs/2009.08530" class="red">[Quotient criterion, discrete case]</a>
+								S.Chaves, The quotient criterion for syzygies in equivariant cohomology for elementary
+								abelian 2-group actions, preprint
+								<a class="neon" href="https://arxiv.org/abs/2009.08530">arXiv:2009.08530</a>.
+							</li>
+							<li>
+								<a href="https://arxiv.org/abs/2202.06347" class="red">[Complexity 0, discrete case]</a>
+								L.Yu, On equivariantly formal 2-torus manifolds, preprint
+								<a class="neon" href="https://arxiv.org/abs/2202.06347">arXiv:2202.06347</a>.
+							</li>
+						</ul>
+
+					</section>
+
+					<section class="white">
+						<div class="r-frame" style="margin-bottom:15px; margin-top:10px;">
+							<h2>
+								References:
+							</h2>
+						</div>
+
+						<div style="margin-bottom:15px;">
+							There is also a certain number of general refences about
+							discrete torus equivariant formality, relation between real and complex cases,
+							discrete torus GKM-theory, etc.
+						</div>
+						<ul>
+							<li>
+								<span class="red">[A book to understand Smith theory and equivariant formality]</span>
+								W.Y.Hsiang. Cohomology Theory of Topological Transformation Groups. Springer-Verlag, 1975.
+							</li>
+							<li>
+								<a href="https://core.ac.uk/download/pdf/82151158.pdf" class="red">[Complex and real actions]</a>
+								D.Biss, V.W.Guillemin, T.S.Holm, The mod 2 cohomology of fixed point sets
+								of anti-symplectic involutions, Adv. Math. 185:2 (2004).
+							</li>
+							<li>
+								<a href="https://arxiv.org/abs/math/0412057" class="red">[Complex and real actions]</a>
+								J.-C.Hausmann, T.Holm, V.Puppe, Conjugation spaces, Alg. Geom. Topology 5 (2005).
+							</li>
+							<li>
+								<a href="https://arxiv.org/abs/0711.3778" class="red">[Real GKM]</a>
+								Z.Lü, Graphs of 2-torus actions, Toric topology, Contemp. Math., 460,
+								Amer. Math. Soc., Providence, RI (2008).
+							</li>
+							<li>
+								<a href="https://arxiv.org/abs/math/0703083" class="red">[Real GKM]</a>
+								B.Chen, Z.Lü, Equivariant cohomology and analytic descriptions of ring isomorphisms,
+								Math. Z. 261 (2009).
+							</li>
+						</ul>
+
+					</section>
+
+					<section class="white">
+						<div class="r-frame" style="margin-bottom:15px; margin-top:10px;">
+							<h2 class="neon">
+								Questions to think about:
+							</h2>
+						</div>
+						<ol>
+							<li style="margin-bottom:25px;">
+								Notice that $M_{\Gamma,\lambda}$ is the intersection of generic $U(n)$-orbit
+								of the (co)adjoint representation with a sum of root subspaces determined by graph $\Gamma$.
+								One can therefore define <span class="red">analogues of $M_{\Gamma,\lambda}$ in all Lie types</span>. Study equivariant
+								formality of such generalizations.
+							</li>
+							<li style="margin-bottom:25px;">
+								Study equivariant formality of $\Gamma$-determined submanifolds of
+								<span class="red">
+									partial flag
+									varieties
+								</span>. These are defined in <a class="red" href="https://arxiv.org/abs/2203.14133">our paper</a>.
+							</li>
+							<li style="margin-bottom:25px;">
+								Study <span class="neon">"indifference hulls"</span> of graphs. For a graph $\Gamma$ consider the
+								minimal number of edges to be added to $\Gamma$ to make it
+								an indifference graph, let us denote it $seam(\Gamma)$. Relate seam to
+								<span class="blue">band-width, tree-width, and other invariants</span> of a graph.
+								Find graphs with the <span class="neon">largest seam</span>.
+								Prove that finding seam is <span class="veryRed">NP-hard</span>.
+								Find algorithmically computable estimations on seam.
+							</li>
+							<li style="margin-bottom:25px;">
+								Build <span class="neon">diagonalization algorithms</span> based on indifference hulls.
+							</li>
+						</ol>
+					</section>
+				</section>
+
+				<section>
+					<div style="margin-bottom:500px; text-align:center">
+						<div class="fragment fade-in-then-out">
+							<h1 style="margin-top:100px">Credits</h1>
+						</div>
+					</div>
+					<div class="fragment" id="credits">
+						<div id="creditTable">
+							<table style="width:100%">
+								<tr>
+									<td style="text-align: right; width: 50%;">
+										<div class="role">Cast:</div>
+									</td>
+									<td style="width:50%; text-align:left;">
+										Anton Ayzenberg<br />
+										Victor Buchstaber<br />
+										Vlad Cherepanov<br />
+										Mikiya Masuda<br />
+										Grigory Solomadin<br />
+										Kostya Sorokin
+									</td>
+								</tr>
+								<tr style="height:50px;"></tr>
+								<tr>
+									<td style="text-align: right; width: 50%;">
+										<div class="role">Real torus actions:</div>
+									</td>
+									<td style="width:50%; text-align:left;">
+										Vladimir Gorchakov
+									</td>
+								</tr>
+								<tr style="height:30px;"></tr>
+								<tr>
+									<td style="text-align: right; width: 50%;">
+										<div class="role">Discussion on discrete torus actions:</div>
+									</td>
+									<td style="width:50%; text-align:left;">
+										Li Yu
+									</td>
+								</tr>
+								<tr style="height:50px;"></tr>
+								<tr>
+									<td style="text-align: right; width: 50%;">
+										<div class="role">Cohomology of Hessenberg varieties:</div>
+									</td>
+									<td style="width:50%; text-align:left;">
+										Mikiya Masuda<br />
+										Takashi Sato
+									</td>
+								</tr>
+								<tr style="height:50px;"></tr>
+								<tr>
+									<td style="text-align: right; width: 50%;">
+										<div class="role">
+											Representation theory and PR of staircase matrix manifolds:
+										</div>
+									</td>
+									<td style="width:50%; text-align:left;">
+										Hiraku Abe<br />
+										Tatsuya Horiguchi
+									</td>
+								</tr>
+								<tr style="height:50px;"></tr>
+								<tr>
+									<td style="text-align: right; width: 50%;">
+										<div class="role">Discussion on arrow matrices:</div>
+									</td>
+									<td style="width:50%; text-align:left;">
+										Tadeusz Januszkiewicz
+									</td>
+								</tr>
+								<tr style="height:30px;"></tr>
+								<tr>
+									<td style="text-align: right; width: 50%;">
+										<div class="role">Discussion on symplectic implosion and arrow matrices:</div>
+									</td>
+									<td style="width:50%; text-align:left;">
+										Megumi Harada
+									</td>
+								</tr>
+								<tr style="height:30px;"></tr>
+								<tr>
+									<td style="text-align: right; width: 50%;">
+										<div class="role">Advice on Cauchy interlacing law:</div>
+									</td>
+									<td style="width:50%; text-align:left;">
+										Alexey Naumov
+									</td>
+								</tr>
+								<tr style="height:50px;"></tr>
+								<tr>
+									<td style="text-align: right; width: 50%;">
+										<div class="role">Cyclic Toda flows:</div>
+									</td>
+									<td style="width:50%; text-align:left;">
+										Nadya Khoroshavkina
+									</td>
+								</tr>
+								<tr style="height:50px;"></tr>
+								<tr>
+									<td style="text-align: right; width: 50%;">
+										<div class="role">
+											Skew symmetric matrices<br />
+											and	other Lie types:
+										</div>
+									</td>
+									<td style="width:50%; text-align:left;">
+										Semyon Abramyan
+									</td>
+								</tr>
+								<tr style="height:50px;"></tr>
+								<tr>
+									<td style="text-align: right; width: 50%;">
+										<div class="role">Computations sanity check:</div>
+									</td>
+									<td style="width:50%; text-align:left;">
+										Anton Medvedev
+									</td>
+								</tr>
+								<tr style="height:50px;"></tr>
+								<tr>
+									<td style="text-align: right; width: 50%;">
+										<div class="role">GKM computations team:</div>
+									</td>
+									<td style="width:50%; text-align:left;">
+										Eugenea Akhmedova<br />
+										Alexander Demin<br />
+										Sveta Gavrilova<br />
+										Eugene Zhukov<br />
+										Anton Medvedev<br />
+										Grigory Taroyan
+									</td>
+								</tr>
+								<tr style="height:50px;"></tr>
+								<tr>
+									<td style="text-align: right; width: 50%;">
+										<div class="role">
+											Gauss parallelization and C++ team:
+										</div>
+									</td>
+									<td style="width:50%; text-align:left;">
+										Oleg Kachan<br />
+										Eduard Tulchinskiy
+									</td>
+								</tr>
+								<tr style="height:50px;"></tr>
+								<tr>
+									<td style="text-align: right; width: 50%;">
+										<div class="role">Algebraic matroid theory:</div>
+									</td>
+									<td style="width:50%; text-align:left;">
+										David Mikheev
+									</td>
+								</tr>
+								<tr style="height:50px;"></tr>
+								<tr>
+									<td style="text-align: right; width: 50%;">
+										<div class="role">Complexity of star matrices:</div>
+									</td>
+									<td style="width:50%; text-align:left;">
+										Anna Kosovskaya
+									</td>
+								</tr>
+								<tr style="height:50px;"></tr>
+								<tr>
+									<td style="text-align: right; width: 50%;">
+										<div class="role">
+											Thanks for organizing the Data analysis
+											school in Voronovo, where this project was born:
+										</div>
+									</td>
+									<td style="width:50%; text-align:left;">
+										Evgeny Sokolov
+									</td>
+								</tr>
+								<tr style="height:50px;"></tr>
+								<tr>
+									<td style="text-align: right; width: 50%;">
+										<div class="role">Thanks for an idea to use html in math work:</div>
+									</td>
+									<td style="width:50%; text-align:left;">
+										Ilya Schurov
+									</td>
+								</tr>
+								<tr style="height:50px;"></tr>
+								<tr>
+									<td style="text-align: right; width: 50%;">
+										<div class="role">The slides were made using:</div>
+									</td>
+									<td style="width:50%; text-align:left;">
+										Reveal.js<br />
+										$\KaTeX$<br />
+										Math.js<br />
+										model-viewer<br />
+									</td>
+								</tr>
+								<tr style="height:30px;"></tr>
+								<tr>
+									<td style="text-align: right; width: 50%;">
+										<div class="role">Used data:</div>
+									</td>
+									<td style="width:50%; text-align:left;">
+										Equilateral Goldberg polyhedron by <a href="https://sketchfab.com/quebec?utm_medium=embed&utm_campaign=share-popup&utm_content=136d354b0f9f40efa8d0f7af18d8a4de" target="_blank">
+											Gerry in Québec
+										</a><br />
+										Wikipedia <br />
+										Running letters by Ganesh Prasad
+									</td>
+								</tr>
+								<tr style="height:100px;"></tr>
+								<tr>
+									<td style="text-align: right; width: 50%;">
+										<div class="role">Inspired by:</div>
+									</td>
+									<td style="width:50%; text-align:left;">
+										"The Matrix" movie
+									</td>
+								</tr>
+								<tr style="height:100px;"></tr>
+							</table>
+							made by Anton Ayzenberg<br />
+							<span class="white">june 2022</span><br />
+							for the seminar of<br />
+							<span class="blue">International Laboratory of Algebraic Topology and its Applications</span>
+							<div style="height:50px;">
+								<img src="pics/animatedTorus.gif">
+							</div>
+						</div>
+					</div>
+				</section>
+
+				<section>
+					<section style="text-align:center; background-color:#000">
+						<div style="margin-bottom:30px; margin-top:10px;">
+							<h2>
+								The expected scene after credits.<br />
+								Questions?
+							</h2>
+						</div>
+						<div id="matrixEffect" class="fragment" style="display: flex; justify-content: center; margin-bottom: 30px;">
+							<div id="falling" style="width:100%; height:500px;">
+								<canvas width="500" height="200" id="canv" />
+							</div>
+						</div>
+					</section>
+
+					<section class="white">
+						<div class="r-frame" style="margin-bottom:5px; margin-top:10px;">
+							<h2 class="white">
+								Our references related to this work:
+							</h2>
+						</div>
+						<ol class="fragment" style="margin-bottom:15px;">
+							<li class="typesetting">
+								<span class="blue">A.Ayzenberg</span>, Torus actions of complexity one and their local properties, Proc. Steklov Inst. Math. 302 (2018), 23-40.
+							</li>
+							<li class="typesetting">
+								<span class="blue">A.A.Ayzenberg, V.M.Buchstaber</span>, Manifolds of isospectral arrow matrices, Sbornik: Mathematics 212:5 (2021), 3-36.
+							</li>
+							<li class="typesetting">
+								<span class="blue">A.A.Ayzenberg, V.M.Buchstaber</span>, Manifolds of isospectral matrices and Hessenberg varieties, International Mathematical Research Notices 2021:21 (2021), 16671-16692.
+							</li>
+							<li class="typesetting">
+								<span class="blue">A.Ayzenberg</span>, Space of isospectral periodic tridiagonal matrices, Algebraic and Geometric Topology 20 (2020), 2957-2994.
+							</li>
+							<li class="typesetting">
+								<span class="blue">A.Ayzenberg, M.Masuda</span>, Orbit spaces of equivariantly formal torus actions, 2019, preprint.
+							</li>
+							<li class="typesetting">
+								<span class="blue">A.Ayzenberg, V.Cherepanov</span>, Matroids in toric topology, 2022, preprint.
+							</li>
+							<li class="typesetting">
+								<span class="blue">A.Ayzenberg, M.Masuda, G.Solomadin</span>, How is a graph not like a manifold?, 2022, preprint.
+							</li>
+							<li class="typesetting">
+								<span class="blue">A.Ayzenberg, M.Masuda, T.Sato</span>, The second cohomology of regular semisimple Hessenberg varieties from GKM theory, to appear in Proc. of Steklov Inst. Math. 2022, preprint.
+							</li>
+							<li class="typesetting">
+								<span class="blue">A.Ayzenberg, V.Buchstaber</span>, Cluster-permutohedra and submanifolds of flag varieties with torus actions, 2022, preprint.
+							</li>
+							<li class="typesetting">
+								<span class="blue">A.Ayzenberg, K.Sorokin</span>, Topological approach to diagonalization algorithms, 2022, preprint.
+							</li>
+						</ol>
+					</section>
+				</section>
+
+			</div>
+		</div>
+
+		<script src="scripts/reveal.js"></script>
+		<script src="scripts/math.js"></script>
+		<script src="mathHard/math.js" type="text/javascript"></script>
+		<script src="scripts/anythingplugin.js"></script>
+
+		<script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+
+		<script>
+			// Full list of configuration options:
+			// https://revealjs.revealjs.com/config/
+			Reveal.initialize({
+				autoAnimateEasing: 'linear',
+				disableLayout: false,
+				margin: 0,
+				center: false,
+				transition: 'none',
+				controlsTutorial: false,
+				controlsLayout: 'bottom-left',
+				//slideNumber: true,
+				//showSlideNumber: 'all',
+				hash: true,
+				anything: [
+					{
+						className: "random",
+						defaults: { min: 0, max: 9 },
+						initialize: (function (container, options) {
+							container.innerHTML = Math.trunc(options.min + Math.random() * (options.max - options.min + 1));
+						})
+					},
+				],
+
+				plugins: [RevealMath.KaTeX],
+
+			});
+
+			//<input placeholder="Enter some text" id="message" name="message">
+			//    <p id="result"></p>
+
+			const messA12 = document.querySelector('#a12');
+			const messA13 = document.querySelector('#a13');
+			const messA14 = document.querySelector('#a14');
+			const messA23 = document.querySelector('#a23');
+			const messA24 = document.querySelector('#a24');
+			const messA34 = document.querySelector('#a34');
+
+			const resultA21 = document.querySelector('#a21');
+			const resultA31 = document.querySelector('#a31');
+			const resultA41 = document.querySelector('#a41');
+			const resultA32 = document.querySelector('#a32');
+			const resultA42 = document.querySelector('#a42');
+			const resultA43 = document.querySelector('#a43');
+
+			messA12.addEventListener('input', function () {
+				resultA21.textContent = this.value;
+			});
+			messA13.addEventListener('input', function () {
+				resultA31.textContent = this.value;
+			});
+			messA14.addEventListener('input', function () {
+				resultA41.textContent = this.value;
+			});
+			messA23.addEventListener('input', function () {
+				resultA32.textContent = this.value;
+			});
+			messA24.addEventListener('input', function () {
+				resultA42.textContent = this.value;
+			});
+			messA34.addEventListener('input', function () {
+				resultA43.textContent = this.value;
+			});
+
+			let taTop, taRight, taBottom, taLeft;
+			let tableForMatrixToAct;
+
+			
+			//Reveal.addKeyBinding(78, () => { showElement(document.getElementById("Hui")); }); //this is N letter
+			Reveal.addKeyBinding(89, () => { }); // ??this is Y letter
+
+            Reveal.addKeyBinding(81, () => { showQRMatrix(); }); //this is Q letter
+
+			Reveal.addKeyBinding(82, () => { resetMatrix(); }); //this is R letter
+			Reveal.addKeyBinding(85, () => { resetMatrixFromForm(); }); //this is U letter
+			Reveal.addKeyBinding(84, () => { showTodaStep(); }); //this is T letter
+            Reveal.addKeyBinding(72, () => { helpElement(); }); //this is H letter
+
+			let matrixForQR;
+			let currMatrixForQR;
+            let currMatrixForToda;
+			let numOfIters = 0;
+			let timeToda = 0;
+            let antiSymmet = [[0.0, 0.0, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0]];
+			const deltaTime = 0.001;
+
+            let container;
+            let canvas;
+            let contx;
+            let wid;
+            let hei;
+            let cols;
+			let ypos;
+			let timer;
+			let originalMatrix = [[1.35, -3.0, 4.0], [-3.0, 1.43, 0], [4.0, 0, -3.86]];
+			let torusContent;
+
+			let lettersAnimate = true;
+
+			function switchAnimationEffects() {
+				let el=document.getElementById("animStatusField");
+				if (lettersAnimate) {
+					lettersAnimate = false;
+					el.innerHTML = "disabled";
+				} else {
+					lettersAnimate = true;
+					el.innerHTML = "enabled";
+                }
+            }
+
+			function helpElement() {
+				let displayed = document.getElementById("help").style.display;
+				
+				if (displayed == "none") {
+                    document.getElementById("help").style.display = "initial";
+				} else {
+                    document.getElementById("help").style.display = "none";
+                }
+            }
+
+            function wrapTextNode(textNode) {
+                var spanNode = document.createElement('span');
+                spanNode.setAttribute('class', 'freetext');
+                var newTextNode = document.createTextNode(textNode.textContent);
+                spanNode.appendChild(newTextNode);
+                textNode.parentNode.replaceChild(spanNode, textNode);
+            }
+
+            function wrapText(node) {
+                node.childNodes.forEach(lowerNode => {
+                    if (lowerNode.nodeType == 3) {
+                        let shorten = lowerNode.textContent;
+                        shorten = shorten.replace(/(\t|\n)/g, '');
+                        if (shorten.length > 0) {
+                            wrapTextNode(lowerNode);
+                        }
+                    } else if (lowerNode.nodeType == 1) {
+                        let check = (lowerNode.className != "katex");
+                        check = check && (lowerNode.className != "katex-display");
+                        check = check && (lowerNode.className != "freetext");
+                        if (check) {
+                            wrapText(lowerNode);
+                        }
+                    }
+                });
+            }
+
+            function wrapImage(imag) {
+                let parent = imag.parentNode;
+                let divNode = document.createElement('div');
+                let canvNode = document.createElement('canvas');
+                canvNode.width = imag.naturalWidth;
+                canvNode.height = imag.naturalHeight;
+                divNode.setAttribute('class', 'appearImage');
+                divNode.appendChild(canvNode);
+                divNode.appendChild(imag);
+                parent.appendChild(divNode);
+				imag.style.display = "none";
+
+                let newImag = new Image();
+                newImag.src = imag.src;
+                let ctx = canvNode.getContext('2d');
+                ctx.drawImage(newImag, 0, 0);
+            }
+
+            function totalWrapper() {
+
+                document.getElementsByClassName("typesetting").forEach(el => {
+                    el.getElementsByTagName("img").forEach(imag => {
+                        //alert(imag.naturalWidth);
+                        wrapImage(imag);
+                    });
+                    wrapText(el);
+                });
+            }
+
+			function startTorusAction() {
+				let torusBack = document.getElementById("torusBox");
+				let rect = torusBack.getBoundingClientRect();
+				torusContent = torusBack.querySelectorAll(".torusInterior")[0];
+				//alert(torusContent);
+				taTop = rect.top, taRight = rect.right, taBottom = rect.bottom, taLeft = rect.left;
+                tableForMatrixToAct = document.getElementById("matrixToAct");
+				showMatrixInTable(tableForMatrixToAct, originalMatrix);
+            }
+
+			function getTorusCoords(e) {
+                torusContent.style.color = "#404040";
+                let x = e.clientX;
+				let y = e.clientY;
+                let relX = 2*math.PI*(x - taLeft) / (taRight - taLeft);
+				let relY = 2 * math.PI * (1 - (y - taTop) / (taBottom - taTop));
+				let newMatrix = [
+					[
+						originalMatrix[0][0],
+						math.complex({ phi: relX, r: originalMatrix[0][1] }),
+						math.complex({ phi: -relX - relY, r: originalMatrix[0][2] })
+					], [
+						math.complex({ phi: -relX, r: originalMatrix[1][0] }),
+						originalMatrix[1][1],
+						math.complex({ phi: relY, r: originalMatrix[1][2] })
+					], [
+						math.complex({ phi: relX + relY, r: originalMatrix[2][0] }),
+						math.complex({ phi: -relY, r: originalMatrix[2][1] }),
+						originalMatrix[2][2]
+					]
+				];
+				showMatrixInTable(tableForMatrixToAct, newMatrix);
+            }
+
+			function getMatrixForQR() {
+				let rows = document.getElementById("matrixForQR").getElementsByTagName("tr");
+				sizeOfQR = rows.length;
+				let A = new Array(sizeOfQR);;
+				for (let i = 0; i < sizeOfQR; i++) {
+					cols = rows[i].getElementsByTagName("td");
+					let entries = new Array(sizeOfQR);
+					for (let j = 0; j < sizeOfQR; j++) {
+						entries[j] = Number(cols[j].innerHTML);
+					}
+
+					A[i] = entries;
+				}
+				matrixForQR = A;
+				currMatrixForQR = A.slice();
+			}
+
+			function oneQRstep(A) {
+				let res = math.qr(A);
+				let B = math.multiply(res.R, res.Q);
+				return B;
+			}
+
+			function oneTodaStep(A) {
+				let size = 4;
+                //alert(A);
+				for (let i = 0; i < size; i++) {
+					antiSymmet[i][i] = 0;
+					for (let j = i+1; j < size; j++) {
+						antiSymmet[i][j] = A[i][j];
+						antiSymmet[j][i] = -A[i][j];
+                    }
+				}
+                let tang = math.subtract(math.multiply(A, antiSymmet), math.multiply(antiSymmet, A));
+                let ans = math.add(A, math.multiply(deltaTime,tang));
+                //alert(ans);
+				return ans;
+			}
+
+			function showTodaStep() {
+				for (let i = 0; i < 15; i++) {
+                    currMatrixForToda = oneTodaStep(currMatrixForToda);
+                }
+				
+                let table = document.getElementById("todaFlow");
+				let timeEl = document.getElementById("timeFlow");
+				timeToda += 0.1;
+				timeEl.innerHTML = timeToda.toFixed(1);
+                showMatrixInTable(table, currMatrixForToda);
+            }
+
+			function outputNumber(alpha) {
+				let str;
+				if (typeof alpha == 'number') {
+					alpha = alpha.toFixed(3);
+					if (math.abs(alpha) < 0.001) {
+						str = '<span class="vanish">' + String(alpha) + '</span>';
+					} else {
+						str = String(alpha);
+					}
+				}
+				else {
+					let re = alpha.re, im = alpha.im;
+					if (math.abs(im) < 0.01) {
+						str = outputNumber(re);
+                    } else if (im < 0) {
+						str = String(re.toFixed(2)) + String(im.toFixed(2)) + "i";
+					} else {
+                        str = String(re.toFixed(2)) + "+" + String(im.toFixed(2)) + "i";
+                    }
+				}
+				return str;
+            }
+
+			function showMatrixInTable(table, matr) {
+				let rows = table.getElementsByTagName("tr");
+				let size = rows.length;
+				for (let i = 0; i < size; i++) {
+					let entries = rows[i].getElementsByTagName("td");
+					for (j = 0; j < size; j++) {
+						entries[j].innerHTML = outputNumber(matr[i][j]);
+						//let ent = matr[i][j].toFixed(3);
+						//if (math.abs(ent) < 0.001) {
+						//	entries[j].innerHTML = '<span class="vanish">' + ent + '</span>';
+						//} else {
+						//	entries[j].innerHTML = ent;
+						//}
+					}
+				}
+			}
+
+			function resetMatrixFromForm() {
+
+				let A = new Array(4);
+				A[0] = new Array(4);
+				A[0][0] = document.getElementById("a11").value ? Number(document.getElementById("a11").value) : 1;
+				A[0][1] = document.getElementById("a12").value ? Number(document.getElementById("a12").value) : 0;
+				A[0][2] = document.getElementById("a13").value ? Number(document.getElementById("a13").value) : 0;
+				A[0][3] = document.getElementById("a14").value ? Number(document.getElementById("a14").value) : 0;
+
+				A[1] = new Array(4);
+				A[1][0] = A[0][1];
+				A[1][1] = document.getElementById("a22").value ? Number(document.getElementById("a22").value) : 1;
+				A[1][2] = document.getElementById("a23").value ? Number(document.getElementById("a23").value) : 0;
+				A[1][3] = document.getElementById("a24").value ? Number(document.getElementById("a24").value) : 0;
+
+				A[2] = new Array(4);
+				A[2][0] = A[0][2];
+				A[2][1] = A[1][2];
+				A[2][2] = document.getElementById("a33").value ? Number(document.getElementById("a33").value) : 1;
+				A[2][3] = document.getElementById("a34").value ? Number(document.getElementById("a34").value) : 0;
+
+				A[3] = new Array(4);
+				A[3][0] = A[0][3];
+				A[3][1] = A[1][3];
+				A[3][2] = A[2][3];
+				A[3][3] = document.getElementById("a44").value ? Number(document.getElementById("a44").value) : 1;
+				matrixForQR = A;
+
+				currMatrixForQR = A.slice();
+                //alert(currMatrixForQR);
+				currMatrixForToda = A.slice();
+
+				originalMatrix = [A[0].slice(0,3), A[1].slice(0,3), A[2].slice(0,3)];
+				//alert(originalMatrix);
+                
+				let table = document.getElementById("iteratedMatrix");
+				let tableToda = document.getElementById("todaFlow");
+                let numEl = document.getElementById("numberOfIters");
+				let timeEl = document.getElementById("timeFlow");
+                tableForMatrixToAct = document.getElementById("matrixToAct");
+
+                numOfIters = 0;
+                timeToda = 0;
+				showMatrixInTable(table, A);
+				showMatrixInTable(tableToda, A);
+                showMatrixInTable(tableForMatrixToAct, originalMatrix);
+				numEl.innerHTML = numOfIters;
+				timeEl.innerHTML = timeToda;
+			}
+
+			function resetMatrix() {
+				let table = document.getElementById("iteratedMatrix");
+				let numEl = document.getElementById("numberOfIters");
+				let numOfIters = 0;
+				numEl.innerHTML = numOfIters;
+				currMatrixForQR = matrixForQR;
+				showMatrixInTable(table, currMatrixForQR);
+			}
+
+			function showQRMatrix() {
+				currMatrixForQR = oneQRstep(currMatrixForQR);
+				table = document.getElementById("iteratedMatrix");
+				numEl = document.getElementById("numberOfIters");
+				numOfIters++;
+				numEl.innerHTML = numOfIters;
+				showMatrixInTable(table, currMatrixForQR);
+			}
+
+			function hideElement(el) {
+				el.style.visibility = "hidden";
+			}
+
+			function showElement(el) {
+				el.style.visibility = "initial";
+			}
+
+			function playAnimation(element) {
+				let list = [];
+				hideAll();
+				let counter = 0;
+				let i = 0;
+				typeset();
+
+				function moveNext() {
+					counter++;
+					setTimeout(typeset, 100);
+				}
+
+				function typeset() {
+					i = 0;
+					let node;
+					let content;
+					let imag = new Image();
+					let w;
+					let h;
+					let backColor = 'black';// window.getComputedStyle(node).getPropertyValue('background-color');
+					let pixels;
+
+					if (counter < list.length) {
+						node = list[counter];
+						showElement(node);
+						if (node.className == "freetext") {
+							content = node.innerHTML;
+							printMoree();
+						} else if (node.className == "appearImage") {
+							let imgNode = node.getElementsByTagName("img")[0];
+							imag.src = imgNode.src;
+							w = imag.width;
+							h = imag.height;
+							//alert(w);
+							let c = node.getElementsByTagName("canvas")[0];
+							let ctx = c.getContext('2d');
+							ctx.drawImage(imag, 0, 0);
+							pixels = ctx.getImageData(0, 0, w, h).data;
+							printImag(ctx);
+						} else {
+							moveNext();
+						}
+					}
+
+					function printImag(ctx) {
+						i++;
+						let sampleSize = 1;
+						if (i < 6) {
+							sampleSize = 2 ** (6 - i);
+							//alert(pixels);
+							ctx.clearRect(0, 0, w, h);
+							for (let y = 0; y < h; y += sampleSize) {
+								for (let x = 0; x < w; x += sampleSize) {
+									let p = (x + (y * w)) * 4;
+									ctx.fillStyle = "rgba(" + pixels[p] + "," + pixels[p + 1] + "," + pixels[p + 2] + "," + pixels[p + 3] + ")";
+									ctx.fillRect(x, y, sampleSize, sampleSize);
+								}
+							}
+							setTimeout(printImag, 100, ctx);
+						} else {
+							ctx.clearRect(0, 0, w, h);
+							ctx.drawImage(imag, 0, 0);
+							moveNext();
+						}
+					}
+
+					function printMoree() {
+						i++;
+						let first = content.substring(0, i); //+ " ".repeat(nodeData.len - i);
+						let last = content.substring(i);
+						//node.innerHTML = first + '<span style="color:' + backColor + '">' + last + '</span>';
+						node.innerHTML = first + '<span style="visibility: hidden">' + last + '</span>';
+
+						if (i < content.length) {
+							setTimeout(printMoree, 10);
+						} else {
+							node.innerHTML = content;
+							moveNext();
+						}
+					}
+				}
+
+				function hideAll() {
+					list = element.querySelectorAll(".freetext,.katex,.katex-display,.appearImage");
+					for (let i = 0; i < list.length; i++) {
+						hideElement(list[i]);
+					}
+				}
+			}
+
+            function matrix() {
+                // Draw a semitransparent black rectangle on top of previous drawing
+                contx.fillStyle = '#0001';
+                contx.fillRect(0, 0, wid, hei);
+
+                // Set color to green and font to 15pt monospace in the drawing context
+                contx.fillStyle = '#0f0';
+                contx.font = '15pt monospace';
+
+                // for each column put a random character at the end
+                ypos.forEach((y, ind) => {
+                    // generate a random character
+                    let text = String.fromCharCode(Math.random() * 128);
+
+                    // x coordinate of the column, y coordinate is already given
+                    let x = ind * 20;
+                    // render the character at (x, y)
+                    contx.fillText(text, x, y);
+
+                    // randomly reset the end of the column if it's at least 100px high
+                    if (y > 100 + Math.random() * 10000) ypos[ind] = 0;
+                    // otherwise just move the y coordinate for the column 20px down,
+                    else ypos[ind] = y + 20;
+				});
+			}
+
+			function stopMatrix() {
+				clearInterval(timer);
+				timer = 0;
+                matrixIsRunning = false;
+            }
+
+			function runMatrix() {
+                container = document.getElementById("falling");
+                canvas = document.getElementById('canv');
+				contx = canvas.getContext('2d');
+				wid = canvas.width = container.offsetWidth;
+                hei = canvas.height = container.offsetHeight;
+				contx.fillStyle = '#000';
+                contx.fillRect(0, 0, wid, hei);
+
+                cols = Math.floor(wid / 20) + 1;
+                ypos = Array(cols).fill(0);
+
+				timer = setInterval(matrix, 100);
+                //alert(timer);
+			}
+
+			function runCredits() {
+				let el = document.getElementById("creditTable");
+				el.setAttribute("class", "anim");
+                //class="anim"
+            }
+
+			let matrixIsRunning = false;
+
+			Reveal.addEventListener('fragmentshown', function (event) {
+				if (lettersAnimate) {
+                    event.fragment.getElementsByClassName('typesetting').forEach(element => {
+                        playAnimation(element);
+                    });
+                }
+				if ((event.fragment.id == "matrixEffect") && (!matrixIsRunning) ) {
+					//alert("Fuck");
+					matrixIsRunning = true;
+					runMatrix();
+                } else if (timer) {
+                    stopMatrix();
+				}
+				if (event.fragment.id == "credits") {
+					runCredits();
+				}
+                if (event.fragment.id == "torusActs") {
+                    startTorusAction();
+                }
+				
+			});
+
+
+		</script>
+
+	</body>
+</html>
