@@ -587,7 +587,7 @@ input[type=text]:focus {
     margin-right: 50px;
     top: 50px;
     color: aliceblue;
-    border: 2px double aliceblue;
+    border: 2px solid aliceblue;
 }
 
 .helpTable li {
@@ -604,6 +604,12 @@ input[type=text]:focus {
     text-shadow: 0 0 4px #ffff00;
     border: none;
     cursor: url("../pics/cursorRect.png") 6 12, auto;
+}
+
+.runDemo {
+    background: #111;
+    color: #00ff00;
+    text-shadow: 0 0 3px #00ff00;
 }
 
 /*

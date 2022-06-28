@@ -29,27 +29,45 @@
 			<div id="help">
 				<div class="helper"></div>
 				<div class="helpTable">
-					<h3 style="margin-bottom:20px;">
-						Help with this presentation.
-					</h3>
+					<table width="100%" style="border: 2px aliceblue; border-bottom-style: solid; margin-bottom: 20px;">
+						<tr>
+							<td style="text-align:left;" width="68%">
+								<h3>
+									Help with this presentation.
+								</h3>
+							</td>
+							<td style="text-align: right; border: 2px aliceblue; border-left-style: solid;">
+								<a class="veryRed" onclick="helpElement();" href="#/0">Go to Start (closes Help)</a>
+							</td>
+						</tr>
+					</table>
+					
 					<ul style="margin-bottom:30px;">
 						<li>
 							Press <a onclick="helpElement();" class="veryRed">"h"</a> to show/hide this help screen.
 						</li>
 						<li>
-							Use <span class="veryRed">left and right arrows</span> to switch between slides.
+							Use <span class="veryRed">left and right arrows</span> to switch between slides horizontally.
 						</li>
 						<li>
-							In some slides you can press <span class="veryRed">down arrow</span> to see a separate slide with references.
+							In some slides you can press <span class="veryRed">down/up arrows</span> to see vertical slides with
+							additional info (references, problems, memes, philosophy, etc.).
 						</li>
 						<li>
-							If you press <span class="veryRed">space</span> you'll move through all slides including vertical.
+							I would recommend to view the horizontal content at the first round of the
+							hermeneutic circle. You can explore the additional vertical content later.
 						</li>
 						<li>
-							You can either use <span class="veryRed">cursor</span> and click on arrows in down right corner.
+							Anyway, if you press <span class="veryRed">space</span> you'll move authomatically
+							through all slides including vertical.
 						</li>
 						<li>
-							Press <span class="veryRed">Esc</span> to see the overview and browse the slides.
+							You can certainly use <span class="veryRed">cursor</span> and click on arrows in down right corner.
+							This is your option if you hold a touchscreen.
+						</li>
+						<li>
+							Press <span class="veryRed">Esc</span> to enter overview mode and browse the slides.
+							In the overview mode, click on a slide to open it.
 						</li>
 						<li>
 							Some slides contain interactive elements. The hints will be written there.
@@ -58,17 +76,29 @@
 							Remember, you can use <span class="veryRed">Tab</span> or cursor to switch between input forms.
 						</li>
 						<li>
-							If something goes wrong, you can always reload the page. It is just an html-page.
-							If nothing works, probably Javascript is disabled in your browser.
+							If something goes wrong, you can always reload the page. It is basically an html-page.
+							If nothing works, then probably Javascript is disabled in your browser.
 						</li>
 						<li>
-							Now "running letters" effect is
+							"The only good bug is a dead bug!". Tell me about bugs, seriously.
+						</li>
+						<li>
+							Now <a id="demoScreen" class="runDemo" onclick="runDemoLetters();">"the running letters effect"</a> is
 							<a id="animStatusField" onclick="switchAnimationEffects();" class="veryRed">enabled</a> &#60;-click to change.
 						</li>
 					</ul>
-					<div>
-						Enjoy your time! <a onclick="helpElement();" class="veryRed">Press</a> to close.
-					</div>
+
+					<table width="100%" style="border: 2px aliceblue; border-top-style: solid; ">
+						<tr>
+							<td style="text-align:left;" width="50%">
+								Enjoy your time! <a onclick="helpElement();" class="veryRed">Press</a> to close.
+							</td>
+							<td style="text-align: right; border: 2px aliceblue; border-left-style: solid;">
+								The source code lies on
+								<a class="veryRed" href="https://github.com/AntonAyzenberg/toric-diagonalization-slides.github.io">GitHub</a>.
+							</td>
+						</tr>
+					</table>
 				</div>
 			</div>
 			<div class="slides">
@@ -83,8 +113,8 @@
 						</h3>
 					</div>
 					<p style="margin-bottom:50px;">
-						<h4 style="color: white;">
-							Anton Ayzenberg <a href="mailto:ayzenberga@gmail.com">ayzenberga@gmail.com</a> <br>
+						<h4 class="white">
+							<a href="https://www.ayzenberg.xyz/">Anton Ayzenberg</a> ayzenberga/at/gmail.com <br>
 							based on joint works with V.Buchstaber, V.Cherepanov, M.Masuda, G.Solomadin, K.Sorokin.
 						</h4>
 					</p>
@@ -122,7 +152,7 @@
 						</div>
 						<div class="fragment" style="margin-bottom:30px;">
 							<div class="typesetting">
-								<span class="white">Problem:</span> given a matrix, find its rank. <br />
+								<span class="white">Problem: given a matrix, find its rank.</span> <br />
 								Computation of simplicial homology reduces to this problem. It is important elsewhere.
 							</div>
 						</div>
@@ -155,8 +185,11 @@
 						<div class="fragment">
 							<div class="typesetting">
 								<span class="white">Conclusion:</span> In applications it is important to
-								have asymptotical diagonalization algorithms. In many cases matrices are sparse.
-								We would like to have diagonalization algorithms for particular sparseness types.
+								have asymptotical diagonalization algorithms. <br/><br />
+								<span class="white">
+									In many cases matrices are sparse.
+									We would like to have diagonalization algorithms for particular sparseness types.
+								</span>	
 							</div>
 						</div>
 					</section>
@@ -785,7 +818,8 @@
 									They are also called <span class="white">unit interval</span> graphs or
 									<span class="white">proper interval</span> graphs.
 									The term "indifference" and the notion were introduced by Roberts'69.
-									His idea was similar to <span class="blue">tolerance spaces</span> but on a line $\mathbb{R}$.
+									His idea was similar to 
+									<a href="https://link.springer.com/article/10.1007/BF00046585" class="blue">tolerance spaces</a> but on a line $\mathbb{R}$.
 								</p>
 							</div>
 						</div>
@@ -813,7 +847,9 @@
 						</div>
 
 						<div class="fragment">
-							And we prove the converse.
+							<div class="typesetting">
+								<span class="white">And we prove the converse.</span>
+							</div>
 						</div>
 
 					</section>
@@ -861,8 +897,8 @@
 
 				</section>
 
-				<section>
-					<section class="white">
+				<section class="white">
+					<section>
 
 						<div class="fragment" style="text-align: center;">
 							<div class="typesetting">
@@ -948,7 +984,7 @@
 					</section>
 					<section>
 						<div class="r-frame" style="margin-bottom:15px; margin-top:10px;">
-							<h2 class="neon">
+							<h2 class="blue">
 								References:
 							</h2>
 						</div>
@@ -956,15 +992,15 @@
 						you'd better read these papers of Smale.
 						<ul style="margin-bottom:15px;">
 							<li>
-								<span class="white">[Morse inequalities for dynamical systems]</span>
+								<span class="neon">[Morse inequalities for dynamical systems]</span>
 								S.Smale, Morse Inequalities for a Dynamical System, Bull. Amer. Math. Soc. 66:1 (1960), 43-49.
 							</li>
 							<li>
-								<span class="white">[Morse inequalities for dynamical systems]</span>
+								<span class="neon">[Morse inequalities for dynamical systems]</span>
 								S.Smale, On Gradient Dynamical Systems, Annals of Mathematics 74 (1961) 199-206.
 							</li>
 							<li>
-								<span class="white">[...and discrete time version]</span>
+								<span class="neon">[...and discrete time version]</span>
 								S.Smale, Differentiable dynamical systems, Bull. Amer. Math. Soc. 73:6 (1967): 747-817.
 							</li>
 						</ul>
@@ -972,7 +1008,7 @@
 						Chapter III of the classical book
 						<ul style="margin-bottom:15px;">
 							<li>
-								<span class="white">[Torus actions]</span>
+								<span class="blue">[Torus actions]</span>
 								G.E.Bredon, Introduction to compact transformation groups, Pure and Applied Mathematics V.46 (1972).
 							</li>
 						</ul>
@@ -980,8 +1016,8 @@
 					</section>
 				</section>
 
-				<section>
-					<section data-auto-animate class="white">
+				<section class="white">
+					<section data-auto-animate>
 						<div class="r-frame" style="margin-bottom:5px; margin-top:10px;">
 							<h2 class="white">
 								Torus actions on matrices:
@@ -1064,7 +1100,7 @@
 
 					<section>
 						<div class="r-frame" style="margin-bottom:15px; margin-top:10px;">
-							<h2 class="neon">
+							<h2 class="blue">
 								Remark:
 							</h2>
 						</div>
@@ -1073,11 +1109,11 @@
 
 						<ul>
 							<li>
-								<span class="white">[Abstract]</span> $U(n)$ acts transitively on $M_\lambda$ and the stabilizer is the torus $T^n$ of diagonal
+								<span class="blue">[Abstract]</span> $U(n)$ acts transitively on $M_\lambda$ and the stabilizer is the torus $T^n$ of diagonal
 								Hermitian matrices. Hence $M_\lambda$ is the homogeneous space $U(n)/T^n$.
 							</li>
 							<li>
-								<span class="white">[Concrete]</span> Let $L_1,\ldots,L_n$ be 1-dimensional eigenspaces of $A\in M_\lambda$ corresponding to
+								<span class="blue">[Concrete]</span> Let $L_1,\ldots,L_n$ be 1-dimensional eigenspaces of $A\in M_\lambda$ corresponding to
 								eigenvalues $\lambda_1,\ldots,\lambda_n$. Then one can associate a full flag
 								\[
 								L_1\subset L_1\oplus L_2\subset L_1\oplus L_2\oplus L_3 \subset \cdots\subset \mathbb{C}^n
@@ -1086,14 +1122,14 @@
 							</li>
 							<li>
 								You can consult
-								<a class="white" href="https://en.wikipedia.org/wiki/Generalized_flag_variety">[wiki]</a>,
+								<a class="blue" href="https://en.wikipedia.org/wiki/Generalized_flag_variety">[wiki]</a>,
 								if this is still unclear.
 							</li>
 							<li>
 								Finally, if you are more into computational math, I guess you'd better start
 								understanding flag manifolds, Grassmann manifolds, and other stuff like this
 								from<br />
-								<a class="white" href="https://press.princeton.edu/absil">[Algorithms on manifolds]</a>
+								<a class="yellow" href="https://press.princeton.edu/absil">[Algorithms on manifolds]</a>
 								P.-A. Absil, R. Mahoney, and Rodolphe Sepulchre.
 								Optimization Algorithms on Matrix Manifolds. Princeton University Press 2007.
 							</li>
@@ -2408,13 +2444,6 @@
 						</ul>
 					</section>
 
-					<!--<section class="blue">
-			<div class="r-frame" style="margin-bottom:15px; margin-top:10px;">
-				<h2 class="white">
-					Suggestions:
-				</h2>
-			</div>
-		</section>-->
 				</section>
 
 				<section>
@@ -2968,7 +2997,9 @@
 									</ul>
 								</td>
 								<td>
-									<img src="pics/model200.jpg" width="200">
+									<a href="https://cs.hse.ru/en/ata-lab/">
+										<img src="pics/model200.jpg" width="200">
+									</a>
 								</td>
 							</tr>
 						</table>
@@ -3877,15 +3908,16 @@
 								</tr>
 								<tr style="height:100px;"></tr>
 							</table>
-							made by Anton Ayzenberg<br />
-							<span class="white">june 2022</span><br />
+							made by <a class="red" href="https://www.ayzenberg.xyz/">Anton Ayzenberg</a><br />
 							for the seminar of<br />
-							<span class="blue">International Laboratory of Algebraic Topology and its Applications</span>
+							<span class="blue">International Laboratory of Algebraic Topology and its Applications</span><br /><br />
+							<span class="white">June 2022</span><br /><br />
 							<div style="height:50px;">
 								<img src="pics/animatedTorus.gif">
 							</div>
 						</div>
 					</div>
+				
 				</section>
 
 				<section>
@@ -3912,35 +3944,149 @@
 						<ol class="fragment" style="margin-bottom:15px;">
 							<li class="typesetting">
 								<span class="blue">A.Ayzenberg</span>, Torus actions of complexity one and their local properties, Proc. Steklov Inst. Math. 302 (2018), 23-40.
+								<a href="https://arxiv.org/abs/1802.08828">[link]</a>
 							</li>
 							<li class="typesetting">
 								<span class="blue">A.A.Ayzenberg, V.M.Buchstaber</span>, Manifolds of isospectral arrow matrices, Sbornik: Mathematics 212:5 (2021), 3-36.
+								<a href="https://arxiv.org/abs/1803.10449">[link]</a>
 							</li>
 							<li class="typesetting">
 								<span class="blue">A.A.Ayzenberg, V.M.Buchstaber</span>, Manifolds of isospectral matrices and Hessenberg varieties, International Mathematical Research Notices 2021:21 (2021), 16671-16692.
+								<a href="https://arxiv.org/abs/1803.01132">[link]</a>
 							</li>
 							<li class="typesetting">
 								<span class="blue">A.Ayzenberg</span>, Space of isospectral periodic tridiagonal matrices, Algebraic and Geometric Topology 20 (2020), 2957-2994.
+								<a href="https://arxiv.org/abs/1803.11433">[link]</a>
 							</li>
 							<li class="typesetting">
 								<span class="blue">A.Ayzenberg, M.Masuda</span>, Orbit spaces of equivariantly formal torus actions, 2019, preprint.
+								<a href="https://arxiv.org/abs/1912.11696">[link]</a>
 							</li>
 							<li class="typesetting">
-								<span class="blue">A.Ayzenberg, V.Cherepanov</span>, Matroids in toric topology, 2022, preprint.
+								<span class="blue">A.Ayzenberg, V.Cherepanov</span>, Torus actions of complexity one in non-general position, Osaka J. Math. 58:4 (2021), 839-853.
+								<a href="https://arxiv.org/abs/1912.11696">[link]</a>
+							</li>
+							
+							<li class="typesetting">
+								<span class="blue">A.Ayzenberg, V.Cherepanov</span>, Matroids in toric topology, 2022,
+								<a href="https://arxiv.org/abs/2203.06282">[preprint].</a>
 							</li>
 							<li class="typesetting">
 								<span class="blue">A.Ayzenberg, M.Masuda, G.Solomadin</span>, How is a graph not like a manifold?, 2022, preprint.
+								<a href="https://arxiv.org/abs/2203.10641">[preprint].</a>
 							</li>
 							<li class="typesetting">
 								<span class="blue">A.Ayzenberg, M.Masuda, T.Sato</span>, The second cohomology of regular semisimple Hessenberg varieties from GKM theory, to appear in Proc. of Steklov Inst. Math. 2022, preprint.
+								<a href="https://arxiv.org/abs/2203.11580">[link].</a>
 							</li>
 							<li class="typesetting">
 								<span class="blue">A.Ayzenberg, V.Buchstaber</span>, Cluster-permutohedra and submanifolds of flag varieties with torus actions, 2022, preprint.
+								<a href="https://arxiv.org/abs/2203.14133">[preprint].</a>
 							</li>
 							<li class="typesetting">
 								<span class="blue">A.Ayzenberg, K.Sorokin</span>, Topological approach to diagonalization algorithms, 2022, preprint.
+								<a href="https://arxiv.org/abs/2204.06111">[preprint].</a>
 							</li>
 						</ol>
+					</section>
+				
+					<section class="blue">
+						<div class="r-frame" style="margin-bottom:15px; margin-top:10px;">
+							<h2 class="red">
+								A general philosophy for dessert.
+							</h2>
+						</div>
+						<div class="fragment" style="margin-bottom:15px;">
+							<div class="typesetting">
+								To explain, why the contents of this presentation is trivial in some sense.
+							</div>
+						</div>
+
+
+						<table class="fragment" style="margin-bottom:15px;">
+							<tr>
+								<td  class="r-frame">
+									<div class="typesetting">
+										<img src="pics/kant200.jpg" width="200">
+									</div>
+								</td>
+								<td style="text-align:left" class="typesetting">
+									<div style="margin-bottom:10px;">
+										<span class="red">Immanuel Kant:</span> space and time are the a priori forms of sensible intuition.
+									</div>
+
+									<div class="white" style="margin-bottom:10px;">
+										We are able study topology, because we have intuition about the space.
+									</div>
+
+									<div class="neon" style="margin-bottom:10px;">
+										We can study dynamical systems, algorithms, and do any form of logical reasoning, because
+										we have intuition about time.
+									</div>
+
+									<div>
+										No way to learn abstract algebra, based on kantian concepts.
+										<span class="red">Unless...</span> well, algebra stems from
+										groups and symmetries, and symmetries are the manifestation of a priori aesthetic
+										perception, inherent to humans.
+									</div>
+
+								</td>
+							</tr>
+						</table>
+
+						<div class="r-stack">
+							<div class="fragment fade-in-then-out">
+								<div class="r-frame">
+									<ul>
+										<li class="typesetting" style="margin-bottom:5px;">
+											<span class="red">Thesis:</span> the task of matrix diagonalization is immanent to 
+											<span class="neon">time perception</span>, not <span class="white">space</span>.
+										</li>
+										<li class="typesetting" style="margin-bottom:5px;">
+											<span class="neon">
+												If there is a matrix diagonalization algorithm, it imposes some causal relationship
+												on permutations coming from "Morse order" on stationary points. A sort of 
+												Bruhat order in the full flag variety.
+											</span>
+										</li>
+										<li class="typesetting">
+											<span class="neon">
+												Not surprizing that the underlying graph $\Gamma$ encoding
+												diagonalizable matrix shapes should live on the time line. 
+											</span> This means, it is an indifference graph.
+										</li>
+									</ul>
+
+								</div>
+							</div>
+
+							<div class="fragment">
+								<div class="r-frame" style="margin-bottom:20px;">
+									<ul>
+										<li class="typesetting" style="margin-bottom:5px;">
+											Recall that indifference means <span class="neon">"intersection graph of properly ordered
+											intervals on a line"</span>.
+										</li>
+										<li class="typesetting">
+											<span class="white">
+												Anyway, it is startling, how topology and algebra help to see the absence
+												of "time-causal" structure in $St_3$, $Cy_k$ ($k\geq 4$), $Net$, and $Sun$.
+											</span>
+										</li>
+									</ul>
+								</div>
+
+								<div class="fragment">
+									<h3 class="typesetting" style="text-align:center;">
+										<span class="red">Now that's finally all.</span>
+									</h3>
+								</div>
+
+							</div>
+							
+						</div>
+
 					</section>
 				</section>
 
@@ -4050,6 +4196,7 @@
 			let timer;
 			let originalMatrix = [[1.35, -3.0, 4.0], [-3.0, 1.43, 0], [4.0, 0, -3.86]];
 			let torusContent;
+			let demoIsRunning=false;
 
 			let lettersAnimate = true;
 
@@ -4330,6 +4477,31 @@
 			function showElement(el) {
 				el.style.visibility = "initial";
 			}
+
+			function runDemoLetters() {
+				el = document.getElementById("demoScreen");
+				let i = 0;
+				let content;
+				let n;
+				if (!demoIsRunning && lettersAnimate) {
+					demoIsRunning = true;
+					content = el.innerHTML;
+                    n = content.length;
+					printPart();
+				}
+				function printPart() {
+					if (i < n) {
+						let first = content.substring(0, i); 
+						let last = content.substring(i);
+						el.innerHTML = first + '<span style="visibility: hidden">' + last + '</span>';
+						i++;
+                        setTimeout(printPart, 50);
+					} else {
+						el.innerHTML = content;
+						demoIsRunning = false;
+                    }
+                }
+            }
 
 			function playAnimation(element) {
 				let list = [];
