@@ -126,7 +126,7 @@ on typesetting/coding in html/css/javascript.
 Just refresh your page in browser. It is very cheap to make small corrections and see the result.
 
 18. Remember, however, that changes in a css-file sometimes can't be seen if you simply refresh the page. 
-This is because your browser stores css-info in hash, I guess. So if you change css-files, be sure to use hard refresh 
+This is because your browser stores css-info in cache, I guess. So if you change css-files, be sure to use hard refresh 
 (Ctrl+"refresh browser button" or Ctrl+Shift+R in Chrome) to update.
 
 19. Now when everything works, write your presentation using general html/css/javascript features and Reveal.js API. The ordinary 
