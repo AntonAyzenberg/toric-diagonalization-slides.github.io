@@ -3,26 +3,28 @@
 
 <html lang="en">
 
-	<head>
-		<meta charset="utf-8">
+<head>
+	<meta charset="utf-8">
 
-		<title>My test presentation</title>
+	<title>Topological approach to symmetric diagonalization</title>
+	<link rel="icon" type="image/x-icon" href="/pics/favicon.ico">
 
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-		<link rel="stylesheet" href="css/reveal.css">
-		<link rel="stylesheet" href="css/matrix.css" id="theme">
-		<style type="text/css" media="screen">
-			.slides section.has-dark-background,
-			.slides section.has-dark-background h2 {
-				color: #00FF00;
-			}
-			.slides section.has-light-background,
-			.slides section.has-light-background h2 {
-				color: #222;
-			}
-		</style>
-	</head>
+	<link rel="stylesheet" href="css/reveal.css">
+	<link rel="stylesheet" href="css/matrix.css" id="theme">
+	<style type="text/css" media="screen">
+		.slides section.has-dark-background,
+		.slides section.has-dark-background h2 {
+			color: #00FF00;
+		}
+
+		.slides section.has-light-background,
+		.slides section.has-light-background h2 {
+			color: #222;
+		}
+	</style>
+</head>
 
 	<body onload="totalWrapper(); startTorusAction();">
 		<div class="reveal">
@@ -1532,7 +1534,7 @@
 						</div>
 						<ul class="fragment">
 							<li class="typesetting">
-								We learned about such matrices and corresponding from Tadeusz Januskiewicz in 2016.
+								We learned about such matrices and corresponding spaces from Tadeusz Januskiewicz in 2016.
 							</li>
 							<li class="typesetting">
 								Using <span class="blue">Cauchy interlacing law</span>, one can prove
@@ -2279,7 +2281,7 @@
 								<div class="typesetting">
 									<div class="r-frame">
 										<span class="blue">Theorem (Franz-Puppe'07):</span> An action of $T$ on $X$ is
-										equivariantly formal iff and only if the following sequence <span class="neon">(ABFP-sequence)</span> is exact:
+										equivariantly formal iff the following sequence <span class="neon">(ABFP-sequence)</span> is exact:
 										\[
 										0\to H^*_T(X)\stackrel{i^*}{\to} H^*_T(X_0)\stackrel{\delta_0}{\to}
 										H^{*+1}_T(X_1,X_0)\stackrel{\delta_1}{\to}\cdots \stackrel{\delta_{k-1}}{\to}H^{*+k}_T(X,X_{k-1})\to 0.
@@ -2292,7 +2294,7 @@
 									Equivalently:
 									<div class="r-frame" style="margin-top:20px;">
 										<span class="blue">Theorem (Franz-Puppe'07):</span> An action of $T$ on $X$ is
-										equivariantly formal iff and only if a certain sheaf on $S(X)$
+										equivariantly formal iff a certain sheaf on $S(X)$
 										<span class="neon">(the GKM sheaf)</span> is acyclic.
 									</div>
 								</div>
@@ -2374,7 +2376,7 @@
 							</li>
 							<li class="typesetting">
 								But it takes <span class="white">time comparable to Tarski algorithm</span>,
-								something like double exponent of the input.
+								something like double exponent of the size of an input.
 							</li>
 							<li class="typesetting">
 								No way to compute $H_{odd}(M_{\Gamma,\lambda})$ in practice.
@@ -2389,7 +2391,7 @@
 
 						<ul class="fragment">
 							<li class="typesetting">
-								We can consider <span class="white">the poset $S(X)$</span>. It is usually easier to describe, than a cell subdivision.
+								We can consider <span class="white">the poset $S(X)$</span>. It is usually easier to describe than a cell subdivision.
 							</li>
 							<li class="typesetting">
 								We can take some <span class="white">sheaves</span> on $S(X)$, such as
@@ -3676,7 +3678,7 @@
 							<li style="margin-bottom:25px;">
 								Study <span class="neon">"indifference hulls"</span> of graphs. For a graph $\Gamma$ consider the
 								minimal number of edges to be added to $\Gamma$ to make it
-								an indifference graph, let us denote it $seam(\Gamma)$. Relate seam to
+								an indifference graph, let us denote this number $seam(\Gamma)$. Relate seam to
 								<span class="blue">band-width, tree-width, and other invariants</span> of a graph.
 								Find graphs with the <span class="neon">largest seam</span>.
 								Prove that finding seam is <span class="veryRed">NP-hard</span>.
