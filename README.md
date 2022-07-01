@@ -33,7 +33,8 @@ just for fun.
 The [pixelated image effect](https://redstapler.co/how-to-create-pixelated-image-with-javascript/) by the Red Stapler is used
 to animate most of the figures.
 
-Two pictures of permutohedra were downloaded from [Wikipedia](https://en.wikipedia.org/wiki/Permutohedron).
+Two pictures of permutohedra were downloaded from [Wikipedia](https://en.wikipedia.org/wiki/Permutohedron). Kant was downloaded
+from somewhere.
 
 ## A friendly note for those who want to make something similar.
 
