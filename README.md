@@ -62,7 +62,7 @@ PowerPoint and Google Slides are not your bros.
 6. An open-source [Reveal.js](https://revealjs.com/) provides a general framework for slides' making, built on Javascript. 
 With reveal.js you can transform your pure html-page into a collection of switchable slides, fragments, etc. It's kind of magic!
 
-7. Another powerful modern thing is [KaTeX](https://katex.org/). It is embedded in Reveal.js, so you don't need to care too much about 
+7. Another powerful modern thing is [KaTeX](https://katex.org/). It is incorporated somehow in Reveal.js, so you don't need to care too much about 
 installation. The explanations and examples of usage provided at the website of Reveal are very clear and easy to follow.
 
 8. I think KaTeX is better than [MathJax](https://www.mathjax.org/) because the output of mathjax on a webpage is something mysterious 
