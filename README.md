@@ -68,7 +68,7 @@ installation. The explanations and examples of usage provided at the website of 
 8. I think KaTeX is better than [MathJax](https://www.mathjax.org/) because the output of mathjax on a webpage is something mysterious 
 (neither a text, nor an image), while KaTeX produces a plain text inside html-tags. It runs very quickly, 
 the output can be copied to clipboard with no need to deTeXify, it preserves css-styles in a fancy way, and so on and so forth. 
-I haven't try to render complicated math stuff, though. 
+I haven't tried to render complicated math stuff with KaTeX, though. 
 
 9. If you want to make Reveal slides in a graphical editor similarly to Google-slides, you can use Reveal-editor. 
 Its free version has limited functionality. I haven't tried the full version because I was not sure if it allows manual
