@@ -146,7 +146,7 @@ flash drive and run on anyone else's computer.
 22-2. If you need a server to run your presentation, you need to have a presentation on a server, that's pretty obvious. 
 You can try to set up a remote server in a hardcore way, or simply upload your presentation as a site to GitHub (as I did). How to do the 
 latter is explained e.g. [here](https://medium.com/@svinkle/publish-and-share-your-own-website-for-free-with-github-2eff049a1cb5). 
-I guess, you'd better rename your main presentation file index.html to make things work.
+I guess, you'd better rename your main presentation file to "index.html" to make things work.
 
 22-3. If the place where you plan to give a talk lacks both the internet connection and the specialists who can
 set up a local server, then well... poor you.
